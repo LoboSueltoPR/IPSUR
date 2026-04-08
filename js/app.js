@@ -38,13 +38,21 @@ function createNoteCard(id, note) {
     card.onclick = () => openModal(note);
 
     const date = note.createdAt ? formatDate(note.createdAt.toDate()) : 'Sin fecha';
-    const preview = note.text.substring(0, 150) + (note.text.length > 150 ? '...' : '');
+
+    // Extraer texto plano del HTML para el preview
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = note.text;
+    const plainText = tempDiv.textContent || tempDiv.innerText || '';
+    const preview = plainText.substring(0, 150) + (plainText.length > 150 ? '...' : '');
 
     card.innerHTML = `
-        <img src="${note.imageUrl}" alt="${note.title}" loading="lazy">
+        <img src="${note.imageUrl}" alt="${escapeHtml(note.title)}" loading="lazy">
         <div class="note-card-body">
             <h3>${escapeHtml(note.title)}</h3>
-            <div class="note-date">${date}</div>
+            <div class="note-meta">
+                <span class="note-author">${escapeHtml(note.authorName || 'Anonimo')}</span>
+                <span class="note-date">${date}</span>
+            </div>
             <p>${escapeHtml(preview)}</p>
         </div>
     `;
@@ -56,8 +64,10 @@ function openModal(note) {
     const modal = document.getElementById('note-modal');
     document.getElementById('modal-image').src = note.imageUrl;
     document.getElementById('modal-title').textContent = note.title;
+    document.getElementById('modal-author').textContent = note.authorName || 'Anonimo';
     document.getElementById('modal-date').textContent = note.createdAt ? formatDate(note.createdAt.toDate()) : '';
-    document.getElementById('modal-text').textContent = note.text;
+    // Renderizar HTML enriquecido
+    document.getElementById('modal-text').innerHTML = note.text;
 
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';

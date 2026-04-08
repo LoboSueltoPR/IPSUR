@@ -19,7 +19,7 @@
 
     <main class="container">
         <section class="hero">
-            <h1>Notas y Artículos</h1>
+            <h1>Notas y Articulos</h1>
             <p>Publicaciones recientes de nuestro equipo</p>
         </section>
 
@@ -29,7 +29,7 @@
         </div>
 
         <div id="no-notes" class="no-notes" style="display:none;">
-            <p>No hay notas publicadas aún.</p>
+            <p>No hay notas publicadas aun.</p>
         </div>
 
         <div id="notes-grid" class="notes-grid"></div>
@@ -41,7 +41,10 @@
             <button class="modal-close" onclick="closeModal()">&times;</button>
             <img id="modal-image" src="" alt="">
             <h2 id="modal-title"></h2>
-            <p id="modal-date" class="modal-date"></p>
+            <div class="modal-meta">
+                <span id="modal-author" class="modal-author"></span>
+                <span id="modal-date" class="modal-date"></span>
+            </div>
             <div id="modal-text" class="modal-text"></div>
         </div>
     </div>

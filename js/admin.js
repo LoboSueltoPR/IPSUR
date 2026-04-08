@@ -1,4 +1,4 @@
-// === Panel de Administracion ===
+// === Panel de Administracion con Usuarios y Editor Enriquecido ===
 
 const loginScreen = document.getElementById('login-screen');
 const adminPanel = document.getElementById('admin-panel');
@@ -7,20 +7,58 @@ const loginError = document.getElementById('login-error');
 const noteForm = document.getElementById('note-form');
 const imageInput = document.getElementById('note-image');
 const imagePreview = document.getElementById('image-preview');
+const userDisplay = document.getElementById('user-display');
+const formTitle = document.getElementById('form-title');
+const submitBtn = document.getElementById('submit-btn');
+const cancelEditBtn = document.getElementById('cancel-edit-btn');
+const imageHint = document.getElementById('image-hint');
 
-// Verificar si ya hay sesion
-if (sessionStorage.getItem('ipsur_admin') === 'true') {
+let currentUser = null;
+let imageBase64 = null;
+let editingNoteId = null;
+let editingImageUrl = null;
+let quill = null;
+
+// === Inicializar Editor Quill ===
+function initQuill() {
+    if (quill) return;
+    quill = new Quill('#editor', {
+        theme: 'snow',
+        placeholder: 'Escribe el contenido de la nota aqui...',
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                ['blockquote', 'code-block'],
+                [{ 'align': [] }],
+                ['link'],
+                ['clean']
+            ]
+        }
+    });
+}
+
+// === Verificar sesion existente ===
+const savedUser = sessionStorage.getItem('ipsur_user');
+if (savedUser) {
+    currentUser = JSON.parse(savedUser);
     showAdminPanel();
 }
 
 // === Login ===
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const username = document.getElementById('username-input').value.trim().toLowerCase();
     const password = document.getElementById('password-input').value;
     const hash = await hashPassword(password);
 
-    if (hash === ADMIN_PASSWORD_HASH) {
-        sessionStorage.setItem('ipsur_admin', 'true');
+    const user = USERS.find(u => u.username === username && u.passwordHash === hash);
+
+    if (user) {
+        currentUser = user;
+        sessionStorage.setItem('ipsur_user', JSON.stringify(user));
         loginError.style.display = 'none';
         showAdminPanel();
     } else {
@@ -31,26 +69,30 @@ loginForm.addEventListener('submit', async (e) => {
 function showAdminPanel() {
     loginScreen.style.display = 'none';
     adminPanel.style.display = 'block';
+    userDisplay.style.display = 'inline-block';
+    userDisplay.textContent = currentUser.displayName;
+    initQuill();
     loadAdminNotes();
 }
 
 function logout() {
-    sessionStorage.removeItem('ipsur_admin');
+    sessionStorage.removeItem('ipsur_user');
+    currentUser = null;
     loginScreen.style.display = 'block';
     adminPanel.style.display = 'none';
+    userDisplay.style.display = 'none';
+    document.getElementById('username-input').value = '';
     document.getElementById('password-input').value = '';
+    cancelEdit();
 }
 
 // === Preview de imagen ===
-let imageBase64 = null;
-
 imageInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Limitar a 800KB para no exceder el limite de Firestore (1MB por documento)
     if (file.size > 5 * 1024 * 1024) {
-        alert('La imagen es muy grande. Maximo 5MB (se comprimira automaticamente).');
+        alert('La imagen es muy grande. Maximo 5MB.');
         imageInput.value = '';
         return;
     }
@@ -63,7 +105,6 @@ function compressAndPreview(file) {
     reader.onload = (ev) => {
         const img = new Image();
         img.onload = () => {
-            // Comprimir imagen usando canvas
             const canvas = document.createElement('canvas');
             const MAX_WIDTH = 1200;
             const MAX_HEIGHT = 800;
@@ -84,15 +125,11 @@ function compressAndPreview(file) {
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
 
-            // Convertir a JPEG con calidad 0.7 para reducir tamaño
             imageBase64 = canvas.toDataURL('image/jpeg', 0.7);
-
             imagePreview.innerHTML = `<img src="${imageBase64}" alt="Preview">`;
 
-            // Verificar que no exceda ~900KB para Firestore
             const sizeKB = Math.round((imageBase64.length * 3) / 4 / 1024);
             if (sizeKB > 900) {
-                // Recomprimir con menor calidad
                 imageBase64 = canvas.toDataURL('image/jpeg', 0.4);
             }
         };
@@ -101,19 +138,24 @@ function compressAndPreview(file) {
     reader.readAsDataURL(file);
 }
 
-// === Publicar nota ===
+// === Publicar / Editar nota ===
 noteForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const title = document.getElementById('note-title').value.trim();
-    const text = document.getElementById('note-text').value.trim();
+    const htmlContent = quill.root.innerHTML.trim();
 
-    if (!title || !text || !imageBase64) {
-        alert('Completa todos los campos incluyendo la imagen');
+    if (!title || !htmlContent || htmlContent === '<p><br></p>') {
+        alert('Completa el titulo y el contenido');
         return;
     }
 
-    const submitBtn = document.getElementById('submit-btn');
+    // Si es nota nueva, la imagen es obligatoria
+    if (!editingNoteId && !imageBase64) {
+        alert('Selecciona una imagen para la nota');
+        return;
+    }
+
     const progressDiv = document.getElementById('upload-progress');
     const progressFill = document.getElementById('progress-fill');
     const progressText = document.getElementById('progress-text');
@@ -121,54 +163,107 @@ noteForm.addEventListener('submit', async (e) => {
     submitBtn.disabled = true;
     progressDiv.style.display = 'block';
     progressFill.style.width = '50%';
-    progressText.textContent = 'Guardando nota...';
+    progressText.textContent = editingNoteId ? 'Actualizando nota...' : 'Guardando nota...';
 
     try {
-        await db.collection('notes').add({
+        const noteData = {
             title: title,
-            text: text,
-            imageUrl: imageBase64,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
+            text: htmlContent,
+            author: currentUser.username,
+            authorName: currentUser.displayName,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        // Solo actualizar imagen si se subio una nueva
+        if (imageBase64) {
+            noteData.imageUrl = imageBase64;
+        }
+
+        if (editingNoteId) {
+            // Editar nota existente
+            await db.collection('notes').doc(editingNoteId).update(noteData);
+            progressText.textContent = 'Actualizada!';
+        } else {
+            // Crear nota nueva
+            noteData.imageUrl = imageBase64;
+            noteData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+            await db.collection('notes').add(noteData);
+            progressText.textContent = 'Publicada!';
+        }
 
         progressFill.style.width = '100%';
-        progressText.textContent = 'Publicada!';
 
-        // Limpiar formulario
         setTimeout(() => {
-            noteForm.reset();
-            imagePreview.innerHTML = '';
-            imageBase64 = null;
+            resetForm();
             progressDiv.style.display = 'none';
             progressFill.style.width = '0%';
             submitBtn.disabled = false;
         }, 1000);
 
-        alert('Nota publicada exitosamente!');
+        alert(editingNoteId ? 'Nota actualizada!' : 'Nota publicada!');
+        cancelEdit();
         loadAdminNotes();
 
     } catch (error) {
-        console.error('Error publicando nota:', error);
-        alert('Error al publicar la nota: ' + error.message);
+        console.error('Error:', error);
+        alert('Error: ' + error.message);
         submitBtn.disabled = false;
         progressDiv.style.display = 'none';
     }
 });
 
-// === Cargar notas en admin ===
+// === Modo edicion ===
+function startEdit(id, note) {
+    editingNoteId = id;
+    editingImageUrl = note.imageUrl;
+
+    formTitle.textContent = 'Editando Nota';
+    submitBtn.textContent = 'Guardar Cambios';
+    cancelEditBtn.style.display = 'inline-block';
+    imageHint.style.display = 'block';
+    imageInput.removeAttribute('required');
+
+    document.getElementById('note-title').value = note.title;
+    quill.root.innerHTML = note.text;
+    imagePreview.innerHTML = `<img src="${note.imageUrl}" alt="Preview actual">`;
+    imageBase64 = null;
+
+    // Scroll arriba al formulario
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function cancelEdit() {
+    editingNoteId = null;
+    editingImageUrl = null;
+    formTitle.textContent = 'Publicar Nueva Nota';
+    submitBtn.textContent = 'Publicar Nota';
+    cancelEditBtn.style.display = 'none';
+    imageHint.style.display = 'none';
+    resetForm();
+}
+
+function resetForm() {
+    noteForm.reset();
+    imagePreview.innerHTML = '';
+    imageBase64 = null;
+    if (quill) quill.root.innerHTML = '';
+}
+
+// === Cargar notas del usuario en admin ===
 async function loadAdminNotes() {
     const list = document.getElementById('admin-notes-list');
     list.innerHTML = '<p style="color:#666;">Cargando...</p>';
 
     try {
         const snapshot = await db.collection('notes')
+            .where('author', '==', currentUser.username)
             .orderBy('createdAt', 'desc')
             .get();
 
         list.innerHTML = '';
 
         if (snapshot.empty) {
-            list.innerHTML = '<p style="color:#666;">No hay notas publicadas.</p>';
+            list.innerHTML = '<p style="color:#666;">No tenes notas publicadas.</p>';
             return;
         }
 
@@ -185,20 +280,32 @@ async function loadAdminNotes() {
                     <h4>${escapeHtml(note.title)}</h4>
                     <span>${date}</span>
                 </div>
-                <button class="btn-danger" onclick="deleteNote('${doc.id}')">Eliminar</button>
+                <div class="admin-note-actions">
+                    <button class="btn-edit" data-id="${doc.id}">Editar</button>
+                    <button class="btn-danger" data-id="${doc.id}">Eliminar</button>
+                </div>
             `;
+
+            // Event listeners
+            item.querySelector('.btn-edit').addEventListener('click', () => startEdit(doc.id, note));
+            item.querySelector('.btn-danger').addEventListener('click', () => deleteNote(doc.id));
 
             list.appendChild(item);
         });
     } catch (error) {
-        list.innerHTML = '<p style="color:#ff6b6b;">Error al cargar notas.</p>';
-        console.error('Error:', error);
+        // Si falla por indice, intentar sin orderBy
+        if (error.code === 'failed-precondition') {
+            list.innerHTML = `<p style="color:#ff6b6b;">Necesitas crear un indice en Firestore. <a href="${error.message.match(/(https:\/\/[^\s]+)/)?.[1] || '#'}" target="_blank" style="color:#7c83ff;">Click aqui para crearlo</a></p>`;
+        } else {
+            list.innerHTML = '<p style="color:#ff6b6b;">Error al cargar notas.</p>';
+            console.error('Error:', error);
+        }
     }
 }
 
 // === Eliminar nota ===
 async function deleteNote(id) {
-    if (!confirm('¿Estas seguro de que quieres eliminar esta nota?')) return;
+    if (!confirm('Estas seguro de que queres eliminar esta nota?')) return;
 
     try {
         await db.collection('notes').doc(id).delete();

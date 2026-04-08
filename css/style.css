@@ -44,6 +44,12 @@ a {
     align-items: center;
 }
 
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
 .logo {
     font-size: 1.5rem;
     font-weight: 700;
@@ -65,6 +71,15 @@ a {
 .btn-admin:hover {
     background: #2a2a4e;
     border-color: #7c83ff;
+}
+
+.user-badge {
+    background: #7c83ff;
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
 }
 
 /* === Hero === */
@@ -152,10 +167,26 @@ a {
     line-height: 1.4;
 }
 
-.note-card-body .note-date {
+.note-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.note-author {
+    background: #1a1a2e;
+    color: #7c83ff;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.note-card-body .note-date,
+.note-meta .note-date {
     font-size: 0.8rem;
     color: #666;
-    margin-bottom: 12px;
 }
 
 .note-card-body p {
@@ -234,8 +265,23 @@ a {
     color: #fff;
 }
 
+.modal-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 24px;
+}
+
+.modal-author {
+    background: #1a1a2e;
+    color: #7c83ff;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
 .modal-date {
-    padding: 8px 24px;
     color: #666;
     font-size: 0.85rem;
 }
@@ -245,7 +291,62 @@ a {
     color: #ccc;
     font-size: 1rem;
     line-height: 1.8;
-    white-space: pre-wrap;
+}
+
+/* Estilos para contenido enriquecido dentro del modal */
+.modal-text h1, .modal-text h2, .modal-text h3 {
+    color: #fff;
+    margin: 16px 0 8px;
+}
+
+.modal-text strong, .modal-text b {
+    color: #fff;
+    font-weight: 700;
+}
+
+.modal-text em, .modal-text i {
+    font-style: italic;
+}
+
+.modal-text u {
+    text-decoration: underline;
+}
+
+.modal-text s {
+    text-decoration: line-through;
+    color: #888;
+}
+
+.modal-text ul, .modal-text ol {
+    padding-left: 24px;
+    margin: 8px 0;
+}
+
+.modal-text li {
+    margin-bottom: 4px;
+}
+
+.modal-text blockquote {
+    border-left: 3px solid #7c83ff;
+    padding-left: 16px;
+    margin: 12px 0;
+    color: #aaa;
+    font-style: italic;
+}
+
+.modal-text pre {
+    background: #1a1a1a;
+    padding: 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 12px 0;
+    font-family: monospace;
+    font-size: 0.9rem;
+}
+
+.modal-text a {
+    color: #7c83ff;
+    text-decoration: underline;
 }
 
 /* === Login === */
@@ -342,6 +443,22 @@ a {
     font-size: 1.1rem;
 }
 
+.btn-edit {
+    background: transparent;
+    color: #7c83ff;
+    border: 1px solid #2a2a4a;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-edit:hover {
+    background: #1a1a2e;
+    border-color: #7c83ff;
+}
+
 .btn-danger {
     background: transparent;
     color: #ff6b6b;
@@ -368,6 +485,11 @@ a {
 .admin-header h1 {
     font-size: 1.8rem;
     color: #fff;
+}
+
+.admin-header-btns {
+    display: flex;
+    gap: 10px;
 }
 
 .note-form {
@@ -414,6 +536,13 @@ a {
     font-size: 0.9rem;
 }
 
+.hint-text {
+    color: #666;
+    font-size: 0.8rem;
+    margin-top: 6px;
+    font-style: italic;
+}
+
 .image-preview {
     margin-top: 12px;
 }
@@ -423,6 +552,87 @@ a {
     max-height: 200px;
     border-radius: 8px;
     object-fit: cover;
+}
+
+/* === Quill Editor Dark Theme Override === */
+#editor-container {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #333;
+}
+
+.ql-toolbar.ql-snow {
+    background: #1a1a1a !important;
+    border: none !important;
+    border-bottom: 1px solid #333 !important;
+}
+
+.ql-container.ql-snow {
+    background: #1a1a1a !important;
+    border: none !important;
+    min-height: 200px;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    color: #e0e0e0;
+}
+
+.ql-editor {
+    min-height: 200px;
+    color: #e0e0e0 !important;
+}
+
+.ql-editor.ql-blank::before {
+    color: #555 !important;
+    font-style: italic;
+}
+
+/* Quill toolbar icons color */
+.ql-snow .ql-stroke {
+    stroke: #999 !important;
+}
+
+.ql-snow .ql-fill {
+    fill: #999 !important;
+}
+
+.ql-snow .ql-picker-label {
+    color: #999 !important;
+}
+
+.ql-snow .ql-picker-options {
+    background: #1a1a1a !important;
+    border-color: #333 !important;
+}
+
+.ql-snow .ql-picker-item {
+    color: #ccc !important;
+}
+
+.ql-snow .ql-active .ql-stroke {
+    stroke: #7c83ff !important;
+}
+
+.ql-snow .ql-active .ql-fill {
+    fill: #7c83ff !important;
+}
+
+.ql-snow .ql-active {
+    color: #7c83ff !important;
+}
+
+.ql-snow .ql-picker-label:hover,
+.ql-snow .ql-picker-item:hover {
+    color: #7c83ff !important;
+}
+
+.ql-snow .ql-picker-label:hover .ql-stroke,
+.ql-snow button:hover .ql-stroke {
+    stroke: #7c83ff !important;
+}
+
+.ql-snow .ql-picker-label:hover .ql-fill,
+.ql-snow button:hover .ql-fill {
+    fill: #7c83ff !important;
 }
 
 /* === Upload Progress === */
@@ -504,6 +714,12 @@ a {
     font-size: 0.8rem;
 }
 
+.admin-note-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
 /* === Footer === */
 .footer {
     margin-top: auto;
@@ -534,6 +750,10 @@ a {
         text-align: center;
     }
 
+    .admin-header-btns {
+        justify-content: center;
+    }
+
     .note-form {
         padding: 20px;
     }
@@ -548,7 +768,17 @@ a {
         height: 150px;
     }
 
+    .admin-note-actions {
+        justify-content: center;
+    }
+
     .modal-content h2 {
         font-size: 1.3rem;
+    }
+
+    .note-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
     }
 }
