@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPSUR - Panel de Administración</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo">IPSUR</a>
+            <nav>
+                <a href="index.html" class="btn-admin">Ver Notas</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Pantalla de Login -->
+    <main id="login-screen" class="container">
+        <section class="login-box">
+            <h1>Panel de Administración</h1>
+            <p>Ingresa la contraseña para publicar notas</p>
+            <form id="login-form">
+                <input type="password" id="password-input" placeholder="Contraseña" required>
+                <button type="submit" class="btn-primary">Ingresar</button>
+            </form>
+            <p id="login-error" class="error-msg" style="display:none;">Contraseña incorrecta</p>
+        </section>
+    </main>
+
+    <!-- Panel de Admin (oculto hasta login) -->
+    <main id="admin-panel" class="container" style="display:none;">
+        <section class="admin-header">
+            <h1>Publicar Nueva Nota</h1>
+            <button id="logout-btn" class="btn-secondary" onclick="logout()">Cerrar Sesión</button>
+        </section>
+
+        <form id="note-form" class="note-form">
+            <div class="form-group">
+                <label for="note-title">Título</label>
+                <input type="text" id="note-title" placeholder="Título de la nota" required>
+            </div>
+
+            <div class="form-group">
+                <label for="note-image">Imagen</label>
+                <input type="file" id="note-image" accept="image/*" required>
+                <div id="image-preview" class="image-preview"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="note-text">Contenido</label>
+                <textarea id="note-text" rows="10" placeholder="Escribe el contenido de la nota aquí..." required></textarea>
+            </div>
+
+            <div id="upload-progress" class="upload-progress" style="display:none;">
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <p id="progress-text">Subiendo...</p>
+            </div>
+
+            <button type="submit" id="submit-btn" class="btn-primary btn-large">Publicar Nota</button>
+        </form>
+
+        <hr class="divider">
+
+        <section class="admin-notes">
+            <h2>Notas Publicadas</h2>
+            <div id="admin-notes-list" class="admin-notes-list"></div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 IPSUR. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

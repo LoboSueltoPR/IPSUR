@@ -1,0 +1,554 @@
+/* === Reset & Base === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #0a0a0a;
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* === Container === */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    width: 100%;
+}
+
+/* === Header === */
+.header {
+    background: #111;
+    border-bottom: 1px solid #222;
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
+
+.header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 2px;
+}
+
+.btn-admin {
+    background: #1a1a2e;
+    color: #7c83ff;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.3s;
+    border: 1px solid #2a2a4a;
+}
+
+.btn-admin:hover {
+    background: #2a2a4e;
+    border-color: #7c83ff;
+}
+
+/* === Hero === */
+.hero {
+    text-align: center;
+    padding: 60px 0 40px;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    color: #888;
+    font-size: 1.1rem;
+}
+
+/* === Loading === */
+.loading {
+    text-align: center;
+    padding: 60px 0;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #222;
+    border-top-color: #7c83ff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.no-notes {
+    text-align: center;
+    padding: 60px 0;
+    color: #666;
+    font-size: 1.1rem;
+}
+
+/* === Notes Grid === */
+.notes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+    padding-bottom: 60px;
+}
+
+.note-card {
+    background: #141414;
+    border: 1px solid #222;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.note-card:hover {
+    border-color: #7c83ff;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(124, 131, 255, 0.1);
+}
+
+.note-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.note-card-body {
+    padding: 20px;
+}
+
+.note-card-body h3 {
+    font-size: 1.2rem;
+    color: #fff;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.note-card-body .note-date {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 12px;
+}
+
+.note-card-body p {
+    color: #999;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* === Modal === */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 40px 20px;
+}
+
+.modal.active {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.modal-content {
+    background: #141414;
+    border: 1px solid #222;
+    border-radius: 16px;
+    max-width: 800px;
+    width: 100%;
+    position: relative;
+    margin: auto;
+    overflow: hidden;
+}
+
+.modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(0,0,0,0.6);
+    border: none;
+    color: #fff;
+    font-size: 1.8rem;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: background 0.3s;
+}
+
+.modal-close:hover {
+    background: rgba(124, 131, 255, 0.3);
+}
+
+.modal-content img {
+    width: 100%;
+    max-height: 450px;
+    object-fit: cover;
+}
+
+.modal-content h2 {
+    padding: 24px 24px 0;
+    font-size: 1.8rem;
+    color: #fff;
+}
+
+.modal-date {
+    padding: 8px 24px;
+    color: #666;
+    font-size: 0.85rem;
+}
+
+.modal-text {
+    padding: 0 24px 24px;
+    color: #ccc;
+    font-size: 1rem;
+    line-height: 1.8;
+    white-space: pre-wrap;
+}
+
+/* === Login === */
+.login-box {
+    max-width: 400px;
+    margin: 100px auto;
+    text-align: center;
+    background: #141414;
+    border: 1px solid #222;
+    border-radius: 16px;
+    padding: 40px;
+}
+
+.login-box h1 {
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.login-box > p {
+    color: #888;
+    margin-bottom: 24px;
+    font-size: 0.9rem;
+}
+
+.login-box form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.login-box input {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.login-box input:focus {
+    border-color: #7c83ff;
+}
+
+.error-msg {
+    color: #ff6b6b;
+    margin-top: 12px;
+    font-size: 0.85rem;
+}
+
+/* === Buttons === */
+.btn-primary {
+    background: #7c83ff;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    background: #6a71e0;
+}
+
+.btn-primary:disabled {
+    background: #444;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #888;
+    border: 1px solid #333;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+    border-color: #888;
+    color: #fff;
+}
+
+.btn-large {
+    width: 100%;
+    padding: 14px;
+    font-size: 1.1rem;
+}
+
+.btn-danger {
+    background: transparent;
+    color: #ff6b6b;
+    border: 1px solid #4a2020;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-danger:hover {
+    background: #4a2020;
+}
+
+/* === Admin Panel === */
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px 0 30px;
+}
+
+.admin-header h1 {
+    font-size: 1.8rem;
+    color: #fff;
+}
+
+.note-form {
+    background: #141414;
+    border: 1px solid #222;
+    border-radius: 16px;
+    padding: 32px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+    width: 100%;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.3s;
+    resize: vertical;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+    border-color: #7c83ff;
+}
+
+.form-group input[type="file"] {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.image-preview {
+    margin-top: 12px;
+}
+
+.image-preview img {
+    max-width: 300px;
+    max-height: 200px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+/* === Upload Progress === */
+.upload-progress {
+    margin-bottom: 20px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: #222;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #7c83ff;
+    border-radius: 3px;
+    width: 0%;
+    transition: width 0.3s;
+}
+
+.upload-progress p {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+/* === Divider === */
+.divider {
+    border: none;
+    border-top: 1px solid #222;
+    margin: 40px 0;
+}
+
+/* === Admin Notes List === */
+.admin-notes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 60px;
+}
+
+.admin-note-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #141414;
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.admin-note-item img {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.admin-note-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.admin-note-info h4 {
+    color: #fff;
+    font-size: 1rem;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.admin-note-info span {
+    color: #666;
+    font-size: 0.8rem;
+}
+
+/* === Footer === */
+.footer {
+    margin-top: auto;
+    background: #111;
+    border-top: 1px solid #222;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.footer p {
+    color: #555;
+    font-size: 0.85rem;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .notes-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-header {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+    }
+
+    .note-form {
+        padding: 20px;
+    }
+
+    .admin-note-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .admin-note-item img {
+        width: 100%;
+        height: 150px;
+    }
+
+    .modal-content h2 {
+        font-size: 1.3rem;
+    }
+}
