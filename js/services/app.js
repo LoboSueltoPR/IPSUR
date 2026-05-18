@@ -5,9 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initNewsletter();
 });
 
-// ===================================================
-// NOTAS — cargar desde Firebase (página Publicaciones)
-// ===================================================
 async function loadNotes() {
     const loading = document.getElementById('loading');
     const noNotes = document.getElementById('no-notes');
@@ -60,9 +57,6 @@ function createNoteCard(id, note) {
     return card;
 }
 
-// ===================================================
-// MODAL
-// ===================================================
 function openModal(note) {
     const modal = document.getElementById('note-modal');
     if (!modal) return;
@@ -85,9 +79,6 @@ document.getElementById('note-modal')?.addEventListener('click', e => {
     if (e.target === e.currentTarget) closeModal();
 });
 
-// ===================================================
-// NEWSLETTER (home)
-// ===================================================
 function initNewsletter() {
     const form = document.getElementById('newsletter-form');
     if (!form) return;
@@ -125,9 +116,6 @@ function initNewsletter() {
     });
 }
 
-// ===================================================
-// UTILS
-// ===================================================
 function formatDate(date) {
     return date.toLocaleDateString('es-ES', { year:'numeric', month:'long', day:'numeric' });
 }

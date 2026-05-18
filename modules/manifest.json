@@ -1,0 +1,75 @@
+{
+  "$schema": "./module.schema.json",
+  "project": "IPSUR — Instituto Político del Sur",
+  "version": "1.0.0",
+  "stack": {
+    "frontend": "HTML estático + CSS + JavaScript vanilla",
+    "backend": "Sin servidor propio (BaaS)",
+    "database": "Firebase Firestore",
+    "hostingRecomendado": "Firebase Hosting o GitHub Pages"
+  },
+  "submodules": [
+    {
+      "id": "sitio-publico",
+      "folder": "modules/sitio-publico",
+      "entry": "module.json"
+    },
+    {
+      "id": "paginas-institucionales",
+      "folder": "modules/paginas-institucionales",
+      "entry": "module.json"
+    },
+    {
+      "id": "cms-publicaciones",
+      "folder": "modules/cms-publicaciones",
+      "entry": "module.json"
+    },
+    {
+      "id": "newsletter",
+      "folder": "modules/newsletter",
+      "entry": "module.json"
+    },
+    {
+      "id": "base-datos",
+      "folder": "modules/base-datos",
+      "entry": "module.json"
+    },
+    {
+      "id": "autenticacion",
+      "folder": "modules/autenticacion",
+      "entry": "module.json"
+    },
+    {
+      "id": "layout-ui",
+      "folder": "modules/layout-ui",
+      "entry": "module.json"
+    },
+    {
+      "id": "estilos",
+      "folder": "modules/estilos",
+      "entry": "module.json"
+    },
+    {
+      "id": "activos-estaticos",
+      "folder": "modules/activos-estaticos",
+      "entry": "module.json"
+    }
+  ],
+  "coleccionesFirestore": [
+    {
+      "name": "notes",
+      "uso": "Publicaciones web (CMS)",
+      "modulos": ["cms-publicaciones", "base-datos"]
+    },
+    {
+      "name": "newsletter",
+      "uso": "Suscripciones del formulario en home",
+      "modulos": ["newsletter", "base-datos"]
+    }
+  ],
+  "dependenciasExternas": [
+    { "nombre": "Firebase SDK", "cdn": "gstatic.com/firebasejs/10.12.0", "modulos": ["base-datos"] },
+    { "nombre": "Quill Editor", "cdn": "cdn.jsdelivr.net/npm/quill@2.0.2", "modulos": ["cms-publicaciones"] },
+    { "nombre": "Google Fonts Inter", "cdn": "fonts.googleapis.com", "modulos": ["estilos"] }
+  ]
+}

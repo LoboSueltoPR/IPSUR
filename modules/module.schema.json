@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "IPSUR Submodule",
+  "type": "object",
+  "required": ["id", "name", "type", "paths"],
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "type": {
+      "type": "string",
+      "enum": ["pages", "scripts", "styles", "data", "auth", "assets", "shared-ui"]
+    },
+    "description": { "type": "string" },
+    "paths": {
+      "type": "object",
+      "description": "Rutas reales en el repo (relativas a la raíz del proyecto)"
+    },
+    "dependsOn": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-module="sitio-publico">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IPSUR — Instituto Político del Sur</title>
     <meta name="description" content="Instituto Político del Sur. Investigar, difundir, formar y militar desde el sur. Conocimiento con anclaje territorial para transformar Bahía Blanca y la región.">
-    <link rel="icon" href="logo.png">
+    <link rel="icon" href="assets/images/logo.png">
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="js/core/paths.js"></script>
 </head>
 <body>
 
@@ -15,7 +16,7 @@
 
 <!-- ============ HERO ============ -->
 <section class="welcome-hero" id="inicio">
-    <img class="welcome-hero__photo" src="hero.jpg" alt="">
+    <img class="welcome-hero__photo" src="assets/images/hero.jpg" alt="">
     <div class="welcome-hero__content">
         <span class="welcome-hero__eyebrow">Instituto Político del Sur · Bahía Blanca</span>
         <h1>
@@ -25,8 +26,8 @@
         </h1>
         <p>Producimos conocimiento con anclaje territorial para transformar la realidad de Bahía Blanca y la región, inscribiendo a la ciudad en el pensamiento nacional y popular.</p>
         <div class="welcome-hero__actions">
-            <a href="publicaciones.html" class="welcome-hero__cta">Ver publicaciones</a>
-            <a href="quienes-somos.html" class="welcome-hero__cta welcome-hero__cta--outline">Conocé el Instituto</a>
+            <a href="pages/cms/publicaciones.html" class="welcome-hero__cta" data-nav>Ver publicaciones</a>
+            <a href="pages/institucionales/quienes-somos.html" class="welcome-hero__cta welcome-hero__cta--outline" data-nav>Conocé el Instituto</a>
         </div>
     </div>
     <div class="welcome-hero__hint"><span></span></div>
@@ -73,37 +74,37 @@
             <p>Cada área del instituto tiene su propio espacio. Entrá a la que te interese.</p>
         </div>
         <div class="access-grid">
-            <a href="quienes-somos.html" class="access-card">
+            <a href="pages/institucionales/quienes-somos.html" class="access-card" data-nav>
                 <span class="access-card__icon">🏛️</span>
                 <h3>Quiénes somos</h3>
                 <p>Presentación institucional, equipo y la idea de un proyecto de largo plazo.</p>
                 <span class="access-card__arrow">Entrar →</span>
             </a>
-            <a href="publicaciones.html" class="access-card">
+            <a href="pages/cms/publicaciones.html" class="access-card" data-nav>
                 <span class="access-card__icon">📰</span>
                 <h3>Publicaciones</h3>
                 <p>Artículos web, revista semestral y libros. Acceso libre y gratuito.</p>
                 <span class="access-card__arrow">Entrar →</span>
             </a>
-            <a href="convocatorias.html" class="access-card">
+            <a href="pages/institucionales/convocatorias.html" class="access-card" data-nav>
                 <span class="access-card__icon">🏆</span>
                 <h3>Convocatorias</h3>
                 <p>Concursos de papers, ensayos y proyectos audiovisuales.</p>
                 <span class="access-card__arrow">Entrar →</span>
             </a>
-            <a href="observatorio.html" class="access-card">
+            <a href="pages/institucionales/observatorio.html" class="access-card" data-nav>
                 <span class="access-card__icon">📊</span>
                 <h3>Observatorio</h3>
                 <p>Datos propios sobre economía, juventud y trabajo en la región.</p>
                 <span class="access-card__arrow">Entrar →</span>
             </a>
-            <a href="formacion.html" class="access-card">
+            <a href="pages/institucionales/formacion.html" class="access-card" data-nav>
                 <span class="access-card__icon">🎓</span>
                 <h3>Formación</h3>
                 <p>Seminarios, jornadas y la escuela de gestión política.</p>
                 <span class="access-card__arrow">Entrar →</span>
             </a>
-            <a href="agenda.html" class="access-card">
+            <a href="pages/institucionales/agenda.html" class="access-card" data-nav>
                 <span class="access-card__icon">🗓️</span>
                 <h3>Agenda</h3>
                 <p>Próximas actividades, lanzamientos y hitos del instituto.</p>
@@ -145,7 +146,7 @@
 </section>
 
 <!-- ============ NEWSLETTER ============ -->
-<section class="section section--surface" id="newsletter">
+<section class="section section--surface" id="newsletter" data-submodule="newsletter">
     <div class="container">
         <div class="newsletter-split">
             <div class="newsletter-split__text">
@@ -187,8 +188,8 @@
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<script src="js/firebase-config.js"></script>
-<script src="js/layout.js"></script>
-<script src="js/app.js"></script>
+<script src="js/core/firebase-config.js"></script>
+<script src="js/ui/layout.js"></script>
+<script src="js/services/app.js"></script>
 </body>
 </html>

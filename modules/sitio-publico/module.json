@@ -1,0 +1,22 @@
+{
+  "id": "sitio-publico",
+  "name": "Sitio público — Home y navegación",
+  "type": "pages",
+  "description": "Página principal, hero, líneas de acción, accesos a secciones, alianzas y newsletter.",
+  "paths": {
+    "pages": ["index.html"],
+    "scripts": ["js/ui/layout.js", "js/services/app.js", "js/core/paths.js", "js/core/firebase-config.js"],
+    "styles": ["css/style.css"],
+    "assets": ["assets/images/hero.jpg", "assets/images/logo.png"]
+  },
+  "dependsOn": ["layout-ui", "estilos", "newsletter", "base-datos"],
+  "responsabilidades": [
+    "Landing institucional",
+    "Formulario newsletter (escritura en Firestore)",
+    "Enlaces a todas las secciones"
+  ],
+  "firebase": {
+    "colecciones": ["newsletter"],
+    "soloLectura": false
+  }
+}

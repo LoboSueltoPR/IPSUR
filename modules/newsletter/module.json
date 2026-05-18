@@ -1,0 +1,27 @@
+{
+  "id": "newsletter",
+  "name": "Newsletter — Suscripciones",
+  "type": "data",
+  "description": "Captura de emails y perfiles desde el formulario del home.",
+  "paths": {
+    "pages": ["index.html"],
+    "scripts": ["js/services/app.js", "js/core/firebase-config.js"]
+  },
+  "dependsOn": ["base-datos"],
+  "responsabilidades": [
+    "Validación básica en cliente",
+    "Alta en colección newsletter"
+  ],
+  "firebase": {
+    "colecciones": ["newsletter"],
+    "operaciones": ["create"]
+  },
+  "modeloDatos": {
+    "newsletter": {
+      "nombre": "string",
+      "email": "string",
+      "perfil": "string",
+      "fecha": "timestamp"
+    }
+  }
+}

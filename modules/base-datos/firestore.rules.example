@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Publicaciones: lectura pública, escritura solo admins autenticados
+    match /notes/{noteId} {
+      allow read: if true;
+      allow create, update, delete: if request.auth != null
+        && request.auth.token.admin == true;
+    }
+
+    // Newsletter: solo alta pública controlada (sin listar emails desde el cliente)
+    match /newsletter/{docId} {
+      allow create: if request.resource.data.keys().hasAll(['nombre', 'email', 'perfil', 'fecha'])
+        && request.resource.data.email is string
+        && request.resource.data.email.matches('.*@.*\\..*');
+      allow read, update, delete: if request.auth != null
+        && request.auth.token.admin == true;
+    }
+  }
+}

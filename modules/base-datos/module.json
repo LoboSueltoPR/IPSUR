@@ -1,0 +1,44 @@
+{
+  "id": "base-datos",
+  "name": "Base de datos — Firebase Firestore",
+  "type": "data",
+  "description": "Capa de persistencia BaaS. Proyecto: ipsur-3e329.",
+  "paths": {
+    "config": ["js/core/firebase-config.js"],
+    "rulesExample": ["modules/base-datos/firestore.rules.example"],
+    "indexesExample": ["modules/base-datos/firestore.indexes.example.json"]
+  },
+  "dependsOn": [],
+  "proveedor": {
+    "nombre": "Google Firebase",
+    "producto": "Cloud Firestore",
+    "planRecomendado": "Spark (gratuito)",
+    "documentacion": "https://firebase.google.com/docs/firestore"
+  },
+  "limitesPlanGratuito": {
+    "almacenamiento": "1 GiB",
+    "lecturasDia": 50000,
+    "escriturasDia": 20000,
+    "borradosDia": 20000,
+    "nota": "Suficiente para un instituto pequeño/mediano si se optimizan imágenes y reglas."
+  },
+  "riesgosActuales": [
+    "Imágenes guardadas como base64 dentro del documento notes (aumenta lecturas, tamaño y costo)",
+    "storageBucket configurado pero no usado — conviene Firebase Storage o CDN",
+    "Reglas de seguridad deben estar en consola Firebase; no están versionadas en el repo",
+    "Cualquier cliente con la API key puede intentar escribir si las reglas son permisivas"
+  ],
+  "recomendacionesGratis": [
+    "Mantener Firestore en plan Spark",
+    "Mover imágenes a Firebase Storage (5 GB gratis) o a archivos estáticos en el repo",
+    "Activar reglas estrictas (ver firestore.rules.example)",
+    "Crear índices compuestos solo cuando Firestore lo pida",
+    "Hosting estático en Firebase Hosting o GitHub Pages (ambos gratis)"
+  ],
+  "alternativas": {
+    "supabase": "PostgreSQL + auth + storage; tier gratis generoso; buena si necesitás SQL",
+    "pocketbase": "Self-hosted gratis; requiere servidor",
+    "githubCms": "JSON en el repo; 100% gratis pero sin panel dinámico sin build",
+    "veredicto": "Firebase es adecuado para este proyecto si corregís imágenes y seguridad"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "id": "cms-publicaciones",
+  "name": "CMS — Publicaciones web",
+  "type": "pages",
+  "description": "Listado público de notas y panel admin para crear, editar y eliminar publicaciones.",
+  "paths": {
+    "pages": ["pages/cms/publicaciones.html", "admin/index.html"],
+    "scripts": ["js/services/app.js", "js/services/admin.js", "js/core/firebase-config.js", "js/core/paths.js"],
+    "styles": ["css/style.css"]
+  },
+  "dependsOn": ["base-datos", "autenticacion", "layout-ui", "estilos"],
+  "responsabilidades": [
+    "Grid de publicaciones con modal de lectura",
+    "Editor rich text (Quill)",
+    "Compresión de imágenes en cliente",
+    "CRUD de documentos en colección notes"
+  ],
+  "firebase": {
+    "colecciones": ["notes"],
+    "operaciones": ["read", "create", "update", "delete"]
+  },
+  "modeloDatos": {
+    "notes": {
+      "title": "string",
+      "text": "string (HTML Quill)",
+      "imageUrl": "string (base64 JPEG — ver nota en base-datos)",
+      "author": "string (username)",
+      "authorName": "string",
+      "createdAt": "timestamp",
+      "updatedAt": "timestamp"
+    }
+  }
+}

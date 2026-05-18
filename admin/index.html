@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-module="cms-publicaciones autenticacion">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IPSUR — Panel de Administración</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+    <script src="../js/core/paths.js"></script>
 </head>
 <body style="background:var(--bg);">
 
@@ -14,10 +15,10 @@
 <header class="admin-site-header">
     <div class="container">
         <div class="admin-header-inner">
-            <a href="index.html" class="admin-brand">IPSUR</a>
+            <a href="../index.html" class="admin-brand">IPSUR</a>
             <div class="admin-header-right">
                 <span id="user-display" class="user-badge-pill" style="display:none;"></span>
-                <a href="index.html" class="btn outline" style="padding:.5rem 1rem; font-size:.82rem;">Ver sitio</a>
+                <a href="../index.html" class="btn outline" style="padding:.5rem 1rem; font-size:.82rem;">Ver sitio</a>
             </div>
         </div>
     </div>
@@ -104,8 +105,8 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
-<script src="js/firebase-config.js"></script>
-<script src="js/admin.js"></script>
+<script src="../js/core/firebase-config.js"></script>
+<script src="../js/services/admin.js"></script>
 </body>
 </html>
 

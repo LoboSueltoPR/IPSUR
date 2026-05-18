@@ -9,3 +9,6 @@ Thumbs.db
 # Editor
 .vscode/
 .idea/
+
+# Node (servidor local)
+node_modules/

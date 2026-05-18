@@ -1,0 +1,29 @@
+{
+  "id": "paginas-institucionales",
+  "name": "Páginas institucionales estáticas",
+  "type": "pages",
+  "description": "Contenido fijo en HTML. No usan base de datos; solo layout compartido.",
+  "paths": {
+    "pages": [
+      "pages/institucionales/quienes-somos.html",
+      "pages/institucionales/convocatorias.html",
+      "pages/institucionales/observatorio.html",
+      "pages/institucionales/formacion.html",
+      "pages/institucionales/agenda.html"
+    ],
+    "scripts": ["js/ui/layout.js", "js/core/paths.js"],
+    "styles": ["css/style.css"],
+    "assets": ["assets/images/logo.png"]
+  },
+  "dependsOn": ["layout-ui", "estilos"],
+  "responsabilidades": [
+    "Presentación institucional",
+    "Convocatorias (contenido estático por ahora)",
+    "Observatorio, formación y agenda (placeholders / contenido editorial)"
+  ],
+  "firebase": {
+    "colecciones": [],
+    "soloLectura": true
+  },
+  "notas": "Ideal migrar bloques repetitivos a plantillas o CMS cuando crezca el contenido."
+}

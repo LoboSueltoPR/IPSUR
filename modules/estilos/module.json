@@ -1,0 +1,21 @@
+{
+  "id": "estilos",
+  "name": "Estilos globales",
+  "type": "styles",
+  "description": "Hoja de estilos única para todo el sitio (público + admin).",
+  "paths": {
+    "styles": ["css/style.css"],
+    "fuentes": ["https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"],
+    "editorExterno": ["https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css"]
+  },
+  "dependsOn": [],
+  "bloquesCss": [
+    "Variables y reset",
+    "Header / footer / navegación",
+    "Hero home y page-hero internas",
+    "Grid de publicaciones y modal",
+    "Formularios y admin",
+    "Overrides Quill (tema claro IPSUR)",
+    "Responsive"
+  ]
+}

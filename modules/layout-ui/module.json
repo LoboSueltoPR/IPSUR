@@ -1,0 +1,27 @@
+{
+  "id": "layout-ui",
+  "name": "Layout compartido — Header, footer, navegación",
+  "type": "shared-ui",
+  "description": "Shell común inyectado por JavaScript en todas las páginas públicas.",
+  "paths": {
+    "scripts": ["js/ui/layout.js", "js/core/paths.js"],
+    "assets": ["assets/images/logo.png"]
+  },
+  "dependsOn": ["estilos"],
+  "responsabilidades": [
+    "Header con navegación y menú hamburguesa",
+    "Footer con enlaces institucionales",
+    "Preloader / transición entre páginas",
+    "Detección de página activa en el nav"
+  ],
+  "paginasQueLoUsan": [
+    "index.html",
+    "pages/institucionales/quienes-somos.html",
+    "pages/cms/publicaciones.html",
+    "pages/institucionales/convocatorias.html",
+    "pages/institucionales/observatorio.html",
+    "pages/institucionales/formacion.html",
+    "pages/institucionales/agenda.html"
+  ],
+  "excluidas": ["admin/index.html"]
+}

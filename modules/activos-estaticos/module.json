@@ -1,0 +1,15 @@
+{
+  "id": "activos-estaticos",
+  "name": "Activos estáticos",
+  "type": "assets",
+  "description": "Imágenes y recursos servidos directamente sin pasar por Firestore.",
+  "paths": {
+    "imagenes": ["assets/images/hero.jpg", "assets/images/logo.png"]
+  },
+  "dependsOn": [],
+  "recomendaciones": [
+    "Mantener hero y logo en el repo o en /assets para cache del CDN",
+    "No almacenar fotos de artículos como base64 en Firestore",
+    "Comprimir JPG/WebP antes de subir (el admin ya comprime en cliente)"
+  ]
+}

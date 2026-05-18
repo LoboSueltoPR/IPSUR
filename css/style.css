@@ -1446,12 +1446,33 @@ a{color:inherit; text-decoration:none}
   background:linear-gradient(90deg, var(--primary), var(--primary-600));
 }
 .preloader.intro .preloader__bar{animation:pl-bar 1.5s ease forwards .45s;}
+/* Transición entre páginas (misma sesión): fondo y logo más suaves */
+.preloader.transition{
+  background:rgba(255, 255, 255, 0.78);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+.preloader.transition .preloader__logo{
+  animation:pl-logo-in-soft .6s ease forwards .06s;
+  filter:drop-shadow(0 10px 24px rgba(15,23,42,.08));
+}
+.preloader.transition .preloader__bar{
+  display:block;
+  opacity:.55;
+  animation:pl-bar-nav .7s ease forwards .18s;
+}
+@keyframes pl-logo-in-soft{
+  to{opacity:.42; transform:translateY(0) scale(1);}
+}
+@keyframes pl-bar-nav{0%{width:0;}100%{width:min(280px, 50vw);}}
 .preloader.curtain .preloader__logo{opacity:.0; animation:none;}
 .preloader.curtain .preloader__bar{display:none;}
 @keyframes pl-logo-in{to{opacity:1; transform:translateY(0) scale(1);}}
 @keyframes pl-bar{0%{width:0;}100%{width:min(320px, 56vw);}}
 @media (prefers-reduced-motion:reduce){
   .preloader.intro .preloader__logo{animation:none; opacity:1; transform:none;}
+  .preloader.transition .preloader__logo{animation:none; opacity:.42; transform:none;}
+  .preloader.transition{background:rgba(255,255,255,.92);}
   .preloader__bar{display:none;}
 }
 

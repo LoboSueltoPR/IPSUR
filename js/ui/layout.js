@@ -1,44 +1,62 @@
 // === IPSUR — layout.js : header/footer compartidos, preloader y transiciones ===
 
 (function () {
-    const PAGES = [
-        { href: 'index.html',          label: 'Inicio' },
-        { href: 'quienes-somos.html',  label: 'Quiénes somos' },
-        { href: 'publicaciones.html',  label: 'Publicaciones' },
-        { href: 'convocatorias.html',  label: 'Convocatorias' },
-        { href: 'observatorio.html',   label: 'Observatorio' },
-        { href: 'formacion.html',      label: 'Formación' },
-        { href: 'agenda.html',         label: 'Agenda' }
+    if (!window.IPSUR) {
+        console.error('IPSUR: cargar js/core/paths.js antes que layout.js');
+        return;
+    }
+
+    const { href, logo, isActive } = window.IPSUR;
+
+    const NAV = [
+        { key: 'inicio', label: 'Inicio' },
+        { key: 'quienesSomos', label: 'Quiénes somos' },
+        { key: 'publicaciones', label: 'Publicaciones' },
+        { key: 'convocatorias', label: 'Convocatorias' },
+        { key: 'observatorio', label: 'Observatorio' },
+        { key: 'formacion', label: 'Formación' },
+        { key: 'agenda', label: 'Agenda' }
     ];
 
-    // Archivo actual
     const path = location.pathname.split('/').pop() || 'index.html';
     const current = path === '' ? 'index.html' : path;
 
     // ---------- PRELOADER ----------
-    const seenIntro = sessionStorage.getItem('ipsur_intro') === '1';
-    const preloader = document.createElement('div');
-    preloader.className = 'preloader ' + (seenIntro ? 'curtain' : 'intro');
-    preloader.innerHTML = `
-        <img class="preloader__logo" src="logo.png" alt="IPSUR — Instituto Político del Sur">
-        <div class="preloader__bar"></div>
-    `;
-    document.body.appendChild(preloader);
+    const INTRO_KEY = 'ipsur_intro';
+    const NAV_KEY = 'ipsur_navigating';
+    const isNavArrival = sessionStorage.getItem(NAV_KEY) === '1';
+    const seenIntro = sessionStorage.getItem(INTRO_KEY) === '1';
 
-    function hidePreloader(delay) {
+    function mountPreloader(mode) {
+        const el = document.createElement('div');
+        el.className = 'preloader ' + mode;
+        el.innerHTML = `
+        <img class="preloader__logo" src="${logo}" alt="IPSUR — Instituto Político del Sur">
+        <div class="preloader__bar"></div>
+        `;
+        document.body.appendChild(el);
+        return el;
+    }
+
+    function hidePreloader(el, delay) {
         setTimeout(() => {
-            preloader.classList.add('is-hidden');
-            setTimeout(() => preloader.remove(), 600);
+            el.classList.add('is-hidden');
+            setTimeout(() => el.remove(), 550);
         }, delay);
     }
 
-    if (seenIntro) {
-        // Cortina rápida entre páginas
-        hidePreloader(180);
-    } else {
-        // Animación completa de intro (1ª visita en la sesión)
-        sessionStorage.setItem('ipsur_intro', '1');
-        hidePreloader(2100);
+    if (isNavArrival) {
+        sessionStorage.removeItem(NAV_KEY);
+        hidePreloader(mountPreloader('transition'), 800);
+    } else if (!seenIntro) {
+        sessionStorage.setItem(INTRO_KEY, '1');
+        hidePreloader(mountPreloader('intro'), 2100);
+    }
+
+    function navigateToPage(dest) {
+        sessionStorage.setItem(NAV_KEY, '1');
+        document.body.classList.add('is-leaving');
+        setTimeout(() => { window.location.href = dest; }, 300);
     }
 
     // ---------- HEADER ----------
@@ -56,9 +74,9 @@
                 </svg></span></a>
         </div>`;
 
-    const navLinks = PAGES.filter(p => p.href !== 'index.html').map(p => {
-        const active = (p.href === current) ? ' class="is-active"' : '';
-        return `<a href="${p.href}"${active}>${p.label}</a>`;
+    const navLinks = NAV.filter(p => p.key !== 'inicio').map(p => {
+        const active = isActive(p.key) ? ' class="is-active"' : '';
+        return `<a href="${href(p.key)}"${active}>${p.label}</a>`;
     }).join('');
 
     const header = document.createElement('header');
@@ -67,12 +85,12 @@
     header.innerHTML = `
         <div class="container">
             <div class="header-inner">
-                <a href="index.html" class="brand" data-nav>
-                    <img class="brand-logo" src="logo.png" alt="IPSUR">
+                <a href="${href('inicio')}" class="brand" data-nav>
+                    <img class="brand-logo" src="${logo}" alt="IPSUR">
                 </a>
                 <nav class="main-nav" id="main-nav">
                     ${navLinks}
-                    <a href="index.html#newsletter" class="nav-cta">Suscribite</a>
+                    <a href="${href('inicio')}#newsletter" class="nav-cta">Suscribite</a>
                     ${socials}
                 </nav>
                 <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false">☰</button>
@@ -92,7 +110,7 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
-                    <img src="logo.png" alt="IPSUR" style="height:46px;width:auto;border-radius:0;margin-bottom:14px;">
+                    <img src="${logo}" alt="IPSUR" style="height:46px;width:auto;border-radius:0;margin-bottom:14px;">
                     <p>Investigar, difundir, formar y militar desde el sur.</p>
                     <p>Bahía Blanca, Argentina.</p>
                     <p class="activá-note">Una iniciativa del espacio <strong>Activá</strong></p>
@@ -100,26 +118,26 @@
                 <div class="footer-col">
                     <h5>Instituto</h5>
                     <ul>
-                        <li><a href="quienes-somos.html" data-nav>Quiénes somos</a></li>
-                        <li><a href="index.html#lineas" data-nav>Líneas de acción</a></li>
-                        <li><a href="index.html#alianzas" data-nav>Alianzas</a></li>
+                        <li><a href="${href('quienesSomos')}" data-nav>Quiénes somos</a></li>
+                        <li><a href="${href('inicio')}#lineas" data-nav>Líneas de acción</a></li>
+                        <li><a href="${href('inicio')}#alianzas" data-nav>Alianzas</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
                     <h5>Contenido</h5>
                     <ul>
-                        <li><a href="publicaciones.html" data-nav>Publicaciones</a></li>
-                        <li><a href="convocatorias.html" data-nav>Convocatorias</a></li>
-                        <li><a href="observatorio.html" data-nav>Observatorio</a></li>
+                        <li><a href="${href('publicaciones')}" data-nav>Publicaciones</a></li>
+                        <li><a href="${href('convocatorias')}" data-nav>Convocatorias</a></li>
+                        <li><a href="${href('observatorio')}" data-nav>Observatorio</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
                     <h5>Participá</h5>
                     <ul>
-                        <li><a href="formacion.html" data-nav>Formación</a></li>
-                        <li><a href="agenda.html" data-nav>Agenda</a></li>
-                        <li><a href="index.html#newsletter" data-nav>Newsletter</a></li>
-                        <li><a href="admin.html">Panel admin</a></li>
+                        <li><a href="${href('formacion')}" data-nav>Formación</a></li>
+                        <li><a href="${href('agenda')}" data-nav>Agenda</a></li>
+                        <li><a href="${href('inicio')}#newsletter" data-nav>Newsletter</a></li>
+                        <li><a href="${href('admin')}">Panel admin</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -189,12 +207,12 @@
         if (!a || !isInternal(a)) return;
         const dest = a.getAttribute('href');
         // Si es la misma página con ancla, dejar comportamiento normal
-        const destFile = dest.split('#')[0];
+        const destFile = dest.split('#')[0].split('/').pop();
         if (destFile === current || destFile === '') return;
 
         e.preventDefault();
-        document.body.classList.add('is-leaving');
-        setTimeout(() => { window.location.href = dest; }, 280);
+        closeMenu();
+        navigateToPage(dest);
     });
 
     // Escape cierra menú

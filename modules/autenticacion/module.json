@@ -1,0 +1,31 @@
+{
+  "id": "autenticacion",
+  "name": "Autenticación — Panel admin",
+  "type": "auth",
+  "description": "Login de editores para publicar notas. Implementación actual: cliente + sessionStorage.",
+  "paths": {
+    "config": ["js/core/firebase-config.js"],
+    "scripts": ["js/services/admin.js"],
+    "pages": ["admin/index.html"]
+  },
+  "dependsOn": ["base-datos"],
+  "implementacionActual": {
+    "metodo": "Lista USERS en firebase-config.js con passwordHash SHA-256",
+    "sesion": "sessionStorage ipsur_user",
+    "firebaseAuth": false
+  },
+  "problemasSeguridad": [
+    "Hashes y usuarios visibles en el código fuente del navegador",
+    "Firestore no valida quién escribe — depende 100% de reglas en servidor",
+    "Sin rate limiting en login",
+    "Contraseñas débiles expuestas en comentarios del código"
+  ],
+  "recomendaciones": [
+    "Migrar a Firebase Authentication (email/password o Google) — gratis en Spark",
+    "Eliminar USERS del frontend",
+    "Reglas Firestore: solo usuarios autenticados con claim admin pueden escribir en notes",
+    "No commitear contraseñas ni hashes en el repositorio público"
+  ],
+  "recomendadoParaGratis": true,
+  "nota": "Firebase Auth encaja con el stack actual sin costo extra en tier gratuito."
+}
