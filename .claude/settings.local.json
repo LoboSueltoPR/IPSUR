@@ -3,7 +3,11 @@
     "allow": [
       "Bash(git remote:*)",
       "Bash(git branch:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(cp -r \"C:/Users/alelo/Desktop/EsteticaWandaCuadrado\" \"C:/Users/alelo/Desktop/NovaPadelCenter\")",
+      "Bash(rm -rf \"C:/Users/alelo/Desktop/NovaPadelCenter/.git\" \"C:/Users/alelo/Desktop/NovaPadelCenter/functions/node_modules\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
