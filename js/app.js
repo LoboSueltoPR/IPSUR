@@ -7,27 +7,45 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ===================================================
-// NAVBAR — scroll + mobile toggle
+// NAVBAR — scroll highlight + hamburger mobile
 // ===================================================
 function initNavbar() {
-    const navbar = document.getElementById('navbar');
-    const toggle = document.getElementById('nav-toggle');
-    const links  = document.getElementById('nav-links');
+    const header   = document.getElementById('site-header');
+    const hamburger= document.getElementById('hamburger');
+    const nav      = document.getElementById('main-nav');
+    const backdrop = document.getElementById('nav-backdrop');
 
     // Scroll effect
     window.addEventListener('scroll', () => {
-        navbar.classList.toggle('scrolled', window.scrollY > 40);
-    });
+        header?.classList.toggle('scrolled', window.scrollY > 30);
+    }, { passive: true });
 
-    // Mobile toggle
-    toggle?.addEventListener('click', () => {
-        links.classList.toggle('open');
-    });
+    // Toggle mobile menu
+    function openMenu() {
+        nav?.classList.add('is-open');
+        backdrop?.classList.add('is-active');
+        hamburger?.classList.add('is-active');
+        hamburger?.setAttribute('aria-expanded', 'true');
+        document.body.classList.add('menu-open');
+    }
+    function closeMenu() {
+        nav?.classList.remove('is-open');
+        backdrop?.classList.remove('is-active');
+        hamburger?.classList.remove('is-active');
+        hamburger?.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('menu-open');
+    }
 
-    // Cerrar al hacer click en un link
-    links?.querySelectorAll('a').forEach(a => {
-        a.addEventListener('click', () => links.classList.remove('open'));
+    hamburger?.addEventListener('click', () => {
+        nav?.classList.contains('is-open') ? closeMenu() : openMenu();
     });
+    backdrop?.addEventListener('click', closeMenu);
+
+    // Close on nav link click
+    nav?.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+    // Close on Escape
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
 }
 
 // ===================================================
@@ -37,6 +55,7 @@ async function loadNotes() {
     const loading = document.getElementById('loading');
     const noNotes = document.getElementById('no-notes');
     const grid    = document.getElementById('notes-grid');
+    if (!grid) return;
 
     try {
         const snapshot = await db.collection('notes')
@@ -51,13 +70,12 @@ async function loadNotes() {
         }
 
         snapshot.forEach(doc => {
-            const card = createNoteCard(doc.id, doc.data());
-            grid.appendChild(card);
+            grid.appendChild(createNoteCard(doc.id, doc.data()));
         });
 
     } catch (error) {
-        loading.innerHTML = '<p style="color:var(--red);font-size:0.88rem;">Error al cargar las publicaciones.</p>';
-        console.error('Error:', error);
+        if (loading) loading.innerHTML = '<p style="color:#b71c1c;font-size:.88rem;text-align:center;">Error al cargar las publicaciones.</p>';
+        console.error('Error cargando notas:', error);
     }
 }
 
@@ -68,7 +86,6 @@ function createNoteCard(id, note) {
 
     const date = note.createdAt ? formatDate(note.createdAt.toDate()) : '';
 
-    // Texto plano para el preview
     const tmp = document.createElement('div');
     tmp.innerHTML = note.text;
     const plain = (tmp.textContent || tmp.innerText || '').trim();
@@ -77,11 +94,11 @@ function createNoteCard(id, note) {
     card.innerHTML = `
         <img src="${note.imageUrl}" alt="${escapeHtml(note.title)}" loading="lazy">
         <div class="note-card-body">
-            <h3>${escapeHtml(note.title)}</h3>
             <div class="note-meta">
                 <span class="note-author">${escapeHtml(note.authorName || 'IPSUR')}</span>
                 <span class="note-date">${date}</span>
             </div>
+            <h3>${escapeHtml(note.title)}</h3>
             <p>${escapeHtml(preview)}</p>
         </div>
     `;
@@ -89,7 +106,7 @@ function createNoteCard(id, note) {
 }
 
 // ===================================================
-// MODAL — ver nota completa
+// MODAL
 // ===================================================
 function openModal(note) {
     const modal = document.getElementById('note-modal');
@@ -104,7 +121,7 @@ function openModal(note) {
 }
 
 function closeModal() {
-    document.getElementById('note-modal').classList.remove('active');
+    document.getElementById('note-modal')?.classList.remove('active');
     document.body.style.overflow = '';
 }
 
@@ -114,7 +131,7 @@ document.getElementById('note-modal')?.addEventListener('click', e => {
 });
 
 // ===================================================
-// NEWSLETTER — guardar en Firebase
+// NEWSLETTER
 // ===================================================
 function initNewsletter() {
     const form = document.getElementById('newsletter-form');
@@ -136,14 +153,14 @@ function initNewsletter() {
 
         try {
             await db.collection('newsletter').add({
-                nombre,
-                email,
+                nombre, email,
                 perfil: perfil || 'sin_especificar',
                 fecha: firebase.firestore.FieldValue.serverTimestamp()
             });
             form.reset();
             success.style.display = 'block';
             btn.textContent = 'Suscribirme';
+            btn.disabled = false;
         } catch (err) {
             error.style.display = 'block';
             btn.disabled = false;
@@ -157,7 +174,7 @@ function initNewsletter() {
 // UTILS
 // ===================================================
 function formatDate(date) {
-    return date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+    return date.toLocaleDateString('es-ES', { year:'numeric', month:'long', day:'numeric' });
 }
 
 function escapeHtml(text) {

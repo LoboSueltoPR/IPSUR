@@ -10,7 +10,7 @@ const imagePreview = document.getElementById('image-preview');
 const userDisplay = document.getElementById('user-display');
 const formTitle = document.getElementById('form-title');
 const submitBtn = document.getElementById('submit-btn');
-const cancelEditBtn = document.getElementById('cancel-edit-btn');
+const cancelEditBtn = document.getElementById('cancel-btn-wrap');
 const imageHint = document.getElementById('image-hint');
 
 let currentUser = null;
@@ -219,7 +219,7 @@ function startEdit(id, note) {
 
     formTitle.textContent = 'Editando Nota';
     submitBtn.textContent = 'Guardar Cambios';
-    cancelEditBtn.style.display = 'inline-block';
+    cancelEditBtn.classList.add('visible');
     imageHint.style.display = 'block';
     imageInput.removeAttribute('required');
 
@@ -237,7 +237,7 @@ function cancelEdit() {
     editingImageUrl = null;
     formTitle.textContent = 'Publicar Nueva Nota';
     submitBtn.textContent = 'Publicar Nota';
-    cancelEditBtn.style.display = 'none';
+    cancelEditBtn.classList.remove('visible');
     imageHint.style.display = 'none';
     resetForm();
 }
