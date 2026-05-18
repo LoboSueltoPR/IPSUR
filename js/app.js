@@ -1,55 +1,12 @@
-// === IPSUR — app.js ===
+// === IPSUR — app.js : notas (publicaciones) + newsletter ===
 
 document.addEventListener('DOMContentLoaded', () => {
-    initNavbar();
     loadNotes();
     initNewsletter();
 });
 
 // ===================================================
-// NAVBAR — scroll highlight + hamburger mobile
-// ===================================================
-function initNavbar() {
-    const header   = document.getElementById('site-header');
-    const hamburger= document.getElementById('hamburger');
-    const nav      = document.getElementById('main-nav');
-    const backdrop = document.getElementById('nav-backdrop');
-
-    // Scroll effect
-    window.addEventListener('scroll', () => {
-        header?.classList.toggle('scrolled', window.scrollY > 30);
-    }, { passive: true });
-
-    // Toggle mobile menu
-    function openMenu() {
-        nav?.classList.add('is-open');
-        backdrop?.classList.add('is-active');
-        hamburger?.classList.add('is-active');
-        hamburger?.setAttribute('aria-expanded', 'true');
-        document.body.classList.add('menu-open');
-    }
-    function closeMenu() {
-        nav?.classList.remove('is-open');
-        backdrop?.classList.remove('is-active');
-        hamburger?.classList.remove('is-active');
-        hamburger?.setAttribute('aria-expanded', 'false');
-        document.body.classList.remove('menu-open');
-    }
-
-    hamburger?.addEventListener('click', () => {
-        nav?.classList.contains('is-open') ? closeMenu() : openMenu();
-    });
-    backdrop?.addEventListener('click', closeMenu);
-
-    // Close on nav link click
-    nav?.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
-
-    // Close on Escape
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
-}
-
-// ===================================================
-// NOTAS — cargar desde Firebase
+// NOTAS — cargar desde Firebase (página Publicaciones)
 // ===================================================
 async function loadNotes() {
     const loading = document.getElementById('loading');
@@ -62,16 +19,14 @@ async function loadNotes() {
             .orderBy('createdAt', 'desc')
             .get();
 
-        loading.style.display = 'none';
+        if (loading) loading.style.display = 'none';
 
         if (snapshot.empty) {
-            noNotes.style.display = 'block';
+            if (noNotes) noNotes.style.display = 'block';
             return;
         }
 
-        snapshot.forEach(doc => {
-            grid.appendChild(createNoteCard(doc.id, doc.data()));
-        });
+        snapshot.forEach(doc => grid.appendChild(createNoteCard(doc.id, doc.data())));
 
     } catch (error) {
         if (loading) loading.innerHTML = '<p style="color:#b71c1c;font-size:.88rem;text-align:center;">Error al cargar las publicaciones.</p>';
@@ -110,12 +65,12 @@ function createNoteCard(id, note) {
 // ===================================================
 function openModal(note) {
     const modal = document.getElementById('note-modal');
+    if (!modal) return;
     document.getElementById('modal-image').src  = note.imageUrl;
     document.getElementById('modal-title').textContent  = note.title;
     document.getElementById('modal-author').textContent = note.authorName || 'IPSUR';
     document.getElementById('modal-date').textContent   = note.createdAt ? formatDate(note.createdAt.toDate()) : '';
     document.getElementById('modal-text').innerHTML     = note.text;
-
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
 }
@@ -131,7 +86,7 @@ document.getElementById('note-modal')?.addEventListener('click', e => {
 });
 
 // ===================================================
-// NEWSLETTER
+// NEWSLETTER (home)
 // ===================================================
 function initNewsletter() {
     const form = document.getElementById('newsletter-form');
@@ -176,7 +131,6 @@ function initNewsletter() {
 function formatDate(date) {
     return date.toLocaleDateString('es-ES', { year:'numeric', month:'long', day:'numeric' });
 }
-
 function escapeHtml(text) {
     const d = document.createElement('div');
     d.textContent = text;

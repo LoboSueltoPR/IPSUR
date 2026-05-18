@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publicaciones — IPSUR</title>
+    <meta name="description" content="Publicaciones del Instituto Político del Sur: artículos web, revista semestral y libros. Acceso libre y gratuito.">
+    <link rel="icon" href="logo.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<main>
+
+    <section class="page-hero">
+        <div class="container">
+            <div class="breadcrumb"><a href="index.html" data-nav>Inicio</a><span>/</span><span>Publicaciones</span></div>
+            <p class="page-hero__eyebrow">Producción propia</p>
+            <h1>Publicaciones</h1>
+            <p>Tres formatos: la web como canal permanente, la revista como referencia semestral y los libros como patrimonio intelectual del espacio.</p>
+        </div>
+    </section>
+
+    <section class="section section--surface">
+        <div class="container">
+            <div class="pub-tipos">
+                <div class="pub-tipo featured">
+                    <span class="pub-tipo-badge">Diferencial clave</span>
+                    <h3>Revista semestral</h3>
+                    <p>Trabajos propios y externos. Publicación de autor curado. Referencia académica del instituto. Primer número: 2026.</p>
+                    <span class="pub-estado proximamente">Próximamente</span>
+                </div>
+                <div class="pub-tipo">
+                    <h3>Publicaciones web</h3>
+                    <p>Artículos, ensayos e informes en formato digital. Principal canal de difusión. Acceso libre y gratuito.</p>
+                    <span class="pub-estado activo">Activo</span>
+                </div>
+                <div class="pub-tipo">
+                    <h3>Libros</h3>
+                    <p>Edición propia. Construcción de patrimonio bibliográfico del espacio. Largo plazo.</p>
+                    <span class="pub-estado proximamente">En desarrollo</span>
+                </div>
+            </div>
+
+            <div class="notes-section-header">
+                <h3>Últimas publicaciones web</h3>
+            </div>
+            <div id="loading" class="loading-notes"><div class="spinner"></div></div>
+            <div id="no-notes" class="no-notes" style="display:none;"><p>No hay publicaciones aún.</p></div>
+            <div id="notes-grid" class="notes-grid"></div>
+        </div>
+    </section>
+
+</main>
+
+<!-- Modal nota completa -->
+<div id="note-modal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <img id="modal-image" src="" alt="">
+        <h2 id="modal-title"></h2>
+        <div class="modal-meta">
+            <span id="modal-author" class="modal-author"></span>
+            <span id="modal-date" class="modal-date"></span>
+        </div>
+        <div id="modal-text" class="modal-text"></div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
