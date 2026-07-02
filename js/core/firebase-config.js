@@ -3,12 +3,13 @@
 // ============================================
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDJr8BijnqsJFkFqPx0VU0w-Mh5sZH9SZg",
-    authDomain: "ipsur-3e329.firebaseapp.com",
-    projectId: "ipsur-3e329",
-    storageBucket: "ipsur-3e329.firebasestorage.app",
-    messagingSenderId: "185359250541",
-    appId: "1:185359250541:web:0cd99c94ad4ecb80dc7b64"
+  apiKey: "AIzaSyCsfUga9tqGHgY_tOKuUocvIn7imx64K4M",
+  authDomain: "ipsur-c3c13.firebaseapp.com",
+  projectId: "ipsur-c3c13",
+  storageBucket: "ipsur-c3c13.firebasestorage.app",
+  messagingSenderId: "783782032122",
+  appId: "1:783782032122:web:2ea258d0da6406f0934f43",
+  measurementId: "G-8JHRPSH4TW"
 };
 
 firebase.initializeApp(firebaseConfig);
