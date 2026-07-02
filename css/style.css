@@ -56,7 +56,6 @@ body.menu-open{overflow:hidden;}
 @media (min-width:1024px){
   .welcome-hero__photo{
     object-position:center 48%;
-    transform:scale(1.05);
   }
 }
 
@@ -1562,3 +1561,91 @@ body.is-leaving .site-footer{
 }
 .breadcrumb a{color:rgba(255,255,255,.7);}
 .breadcrumb a:hover{color:#fff;}
+
+
+/* ====== Team Grid (Organigrama Jerárquico) ====== */
+.org-tree-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+    margin-top: 48px;
+}
+.org-tier {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    position: relative;
+    flex-wrap: wrap;
+    width: 100%;
+}
+.org-branch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+}
+.org-branch-title {
+    background: var(--primary);
+    color: white;
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(15,23,42,.1);
+}
+.org-group {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.team-card {
+    background: var(--surface);
+    border: 1px solid rgba(15,23,42,.06);
+    border-radius: 20px;
+    padding: 24px 16px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: all .3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    min-width: 160px;
+    max-width: 200px;
+}
+.team-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 18px 38px rgba(17,24,39,.1);
+}
+.team-photo {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 4px;
+    border: 3px solid #fff;
+    box-shadow: 0 8px 20px rgba(15,23,42,.08);
+}
+.team-card h3 {
+    font-size: 1rem;
+    margin: 0;
+    color: var(--text-heading);
+    line-height: 1.2;
+}
+.team-card p {
+    font-size: 0.8rem;
+    color: var(--primary);
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Responsiveness fixes for mobile */
+@media (max-width: 768px) {
+    .org-group {
+        flex-direction: column;
+    }
+}

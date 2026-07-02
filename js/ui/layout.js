@@ -62,7 +62,7 @@
     // ---------- HEADER ----------
     const socials = `
         <div class="socials">
-            <a href="#" aria-label="Instagram"><span>
+            <a href="https://www.instagram.com/ipsur.av/" target="_blank" aria-label="Instagram"><span>
                 <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
                     <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="1.8"/>
                     <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1.8"/>
@@ -144,7 +144,7 @@
                     <h5>Contacto</h5>
                     <p class="footer-contact-email">contacto@ipsur.org</p>
                     <div class="footer-rrss">
-                        <a href="#">Instagram</a>
+                        <a href="https://www.instagram.com/ipsur.av/" target="_blank">Instagram</a>
                         <a href="#">X</a>
                     </div>
                 </div>
