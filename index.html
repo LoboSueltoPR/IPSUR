@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IPSUR — Instituto Político del Sur</title>
     <meta name="description" content="Instituto Político del Sur. Investigar, difundir, formar y militar desde el sur. Conocimiento con anclaje territorial para transformar Bahía Blanca y la región.">
+    
+    <!-- Open Graph / Redes Sociales (WhatsApp, Facebook, etc.) -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ipsur.ar/">
+    <meta property="og:title" content="IPSUR — Instituto Político del Sur">
+    <meta property="og:description" content="Investigar, difundir, formar y militar desde el sur. Producimos conocimiento con anclaje territorial.">
+    <meta property="og:image" itemprop="image" content="https://ipsur-c3c13.web.app/assets/images/logo.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:site_name" content="IPSUR">
+
     <link rel="icon" href="assets/images/logo.png">
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -16,9 +26,9 @@
 
 <!-- ============ HERO ============ -->
 <section class="welcome-hero" id="inicio">
-    <img class="welcome-hero__photo" src="assets/images/logo.png" alt="" style="object-fit: contain; padding: 2rem; opacity: 0.25;">
+    <img class="welcome-hero__photo" src="assets/images/fondo%20ipsur.png" alt="">
     <div class="welcome-hero__content">
-        <span class="welcome-hero__eyebrow">Instituto Político del Sur · Bahía Blanca</span>
+        <img src="assets/images/logo%20y%20nombre%20abajo.png" alt="Logo IPSUR" style="width: 320px; height: auto; opacity: 1; margin-bottom: 0;">
         <h1>
             Investigar, difundir,<br>
             formar y <span class="welcome-hero__highlight">militar</span><br>
@@ -26,8 +36,8 @@
         </h1>
         <p>Producimos conocimiento con anclaje territorial para transformar la realidad de Bahía Blanca y la región.</p>
         <div class="welcome-hero__actions">
-            <a href="pages/cms/publicaciones.html" class="welcome-hero__cta" data-nav>Ver publicaciones</a>
-            <a href="pages/institucionales/quienes-somos.html" class="welcome-hero__cta welcome-hero__cta--outline" data-nav>Conocé el Instituto</a>
+            <a href="/publicaciones" class="welcome-hero__cta" data-nav>Ver publicaciones</a>
+            <a href="/quienes-somos" class="welcome-hero__cta welcome-hero__cta--outline" data-nav>Conocé el Instituto</a>
         </div>
     </div>
     <div class="welcome-hero__hint"><span></span></div>
@@ -73,37 +83,37 @@
             <p>Cada área del instituto tiene su propio espacio. Entrá a la que te interese.</p>
         </div>
         <div class="access-grid">
-            <a href="pages/institucionales/quienes-somos.html" class="access-card" data-nav>
+            <a href="/quienes-somos" class="access-card" data-nav>
                 <span class="access-card__icon">🏛️</span>
                 <h3>Quiénes somos</h3>
                 <p>Presentación institucional, equipo y la idea de un proyecto de largo plazo.</p>
                 <span class="access-card__arrow">Entrar →</span>
             </a>
-            <a href="pages/cms/publicaciones.html" class="access-card" data-nav>
+            <a href="/publicaciones" class="access-card" data-nav>
                 <span class="access-card__icon">📰</span>
                 <h3>Publicaciones</h3>
                 <p>Artículos web, revista semestral y libros. Acceso libre y gratuito.</p>
                 <span class="access-card__arrow">Entrar →</span>
             </a>
-            <a href="pages/institucionales/convocatorias.html" class="access-card" data-nav>
+            <a href="/convocatorias" class="access-card" data-nav>
                 <span class="access-card__icon">🏆</span>
                 <h3>Convocatorias</h3>
                 <p>Concursos de papers, ensayos y proyectos audiovisuales.</p>
                 <span class="access-card__arrow">Entrar →</span>
             </a>
-            <a href="pages/institucionales/observatorio.html" class="access-card" data-nav>
+            <a href="/observatorio" class="access-card" data-nav>
                 <span class="access-card__icon">📊</span>
                 <h3>Observatorio</h3>
                 <p>Datos propios sobre economía, juventud y trabajo en la región.</p>
                 <span class="access-card__arrow">Entrar →</span>
             </a>
-            <a href="pages/institucionales/formacion.html" class="access-card" data-nav>
+            <a href="/formacion" class="access-card" data-nav>
                 <span class="access-card__icon">🎓</span>
                 <h3>Formación</h3>
                 <p>Seminarios, jornadas y la escuela de gestión política.</p>
                 <span class="access-card__arrow">Entrar →</span>
             </a>
-            <a href="pages/institucionales/agenda.html" class="access-card" data-nav>
+            <a href="/agenda" class="access-card" data-nav>
                 <span class="access-card__icon">🗓️</span>
                 <h3>Agenda</h3>
                 <p>Próximas actividades, lanzamientos y hitos del instituto.</p>
@@ -121,7 +131,7 @@
                 <p class="section-eyebrow" style="margin-bottom:8px;">Investigación y análisis</p>
                 <h2 style="margin-bottom:0;">Últimas publicaciones</h2>
             </div>
-            <a href="pages/cms/publicaciones.html" class="btn outline">Ver todas →</a>
+            <a href="/publicaciones" class="btn outline">Ver todas →</a>
         </div>
         <div id="notes-grid" class="notes-grid" data-limit="3"></div>
         <div id="loading" style="text-align:center; padding:2rem;"><p>Cargando publicaciones...</p></div>

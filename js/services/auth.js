@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Redirigir si ya está logueado
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
-                window.location.href = 'dashboard.html';
+                window.location.href = '/admin';
             }
         });
 
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Protección de rutas privadas (ej. dashboard.html)
         firebase.auth().onAuthStateChanged((user) => {
             if (!user) {
-                window.location.href = 'login.html';
+                window.location.href = '/login';
             } else {
                 // Configurar email del usuario en la UI si existe
                 const userEmailEl = document.getElementById('admin-user-email');
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (logoutBtn) {
             logoutBtn.addEventListener('click', () => {
                 firebase.auth().signOut().then(() => {
-                    window.location.href = 'login.html';
+                    window.location.href = '/login';
                 });
             });
         }

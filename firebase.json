@@ -1,6 +1,17 @@
 {
   "hosting": {
     "public": ".",
+    "cleanUrls": true,
+    "rewrites": [
+      { "source": "/admin", "destination": "/pages/admin/dashboard.html" },
+      { "source": "/login", "destination": "/pages/admin/login.html" },
+      { "source": "/agenda", "destination": "/pages/institucionales/agenda.html" },
+      { "source": "/convocatorias", "destination": "/pages/institucionales/convocatorias.html" },
+      { "source": "/formacion", "destination": "/pages/institucionales/formacion.html" },
+      { "source": "/observatorio", "destination": "/pages/institucionales/observatorio.html" },
+      { "source": "/quienes-somos", "destination": "/pages/institucionales/quienes-somos.html" },
+      { "source": "/publicaciones", "destination": "/pages/cms/publicaciones.html" }
+    ],
     "ignore": [
       "firebase.json",
       "**/.*",

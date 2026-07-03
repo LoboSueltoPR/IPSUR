@@ -195,7 +195,7 @@
         const href = a.getAttribute('href') || '';
         if (!href || href.startsWith('#') || href.startsWith('mailto:') ||
             href.startsWith('http') || a.target === '_blank') return false;
-        return href.endsWith('.html') || href.includes('.html#');
+        return href.endsWith('.html') || href.includes('.html#') || href.startsWith('/');
     }
 
     document.addEventListener('click', (e) => {

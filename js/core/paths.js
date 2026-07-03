@@ -19,18 +19,21 @@
     }
 
     const ROUTES = {
-        inicio: 'index.html',
-        quienesSomos: 'pages/institucionales/quienes-somos.html',
-        publicaciones: 'pages/cms/publicaciones.html',
-        convocatorias: 'pages/institucionales/convocatorias.html',
-        observatorio: 'pages/institucionales/observatorio.html',
-        formacion: 'pages/institucionales/formacion.html',
-        agenda: 'pages/institucionales/agenda.html',
-        admin: 'admin/index.html'
+        inicio: '/',
+        quienesSomos: '/quienes-somos',
+        publicaciones: '/publicaciones',
+        convocatorias: '/convocatorias',
+        observatorio: '/observatorio',
+        formacion: '/formacion',
+        agenda: '/agenda',
+        admin: '/admin',
+        login: '/login'
     };
 
     function href(route) {
         const file = ROUTES[route] || route;
+
+        if (file.startsWith('/')) return file;
 
         if (inInstitucionales) {
             if (file === 'index.html') return '../../index.html';
