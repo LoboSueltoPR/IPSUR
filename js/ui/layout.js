@@ -12,9 +12,9 @@
         { key: 'inicio', label: 'Inicio' },
         { key: 'quienesSomos', label: 'Quiénes somos' },
         { key: 'publicaciones', label: 'Publicaciones' },
-        { key: 'convocatorias', label: 'Convocatorias' },
-        { key: 'observatorio', label: 'Observatorio' },
-        { key: 'formacion', label: 'Formación' },
+        // { key: 'convocatorias', label: 'Convocatorias' },
+        // { key: 'observatorio', label: 'Observatorio' },
+        // { key: 'formacion', label: 'Formación' },
         { key: 'agenda', label: 'Agenda' }
     ];
 
@@ -142,7 +142,6 @@
                     <p class="footer-contact-email">contacto@ipsur.org</p>
                     <div class="footer-rrss">
                         <a href="https://www.instagram.com/ipsur.av/" target="_blank">Instagram</a>
-                        <a href="#">X</a>
                     </div>
                 </div>
             </div>

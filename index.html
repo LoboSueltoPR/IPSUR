@@ -24,7 +24,7 @@
             formar y <span class="welcome-hero__highlight">militar</span><br>
             desde el sur.
         </h1>
-        <p>Producimos conocimiento con anclaje territorial para transformar la realidad de Bahía Blanca y la región, inscribiendo a la ciudad en el pensamiento nacional y popular.</p>
+        <p>Producimos conocimiento con anclaje territorial para transformar la realidad de Bahía Blanca y la región.</p>
         <div class="welcome-hero__actions">
             <a href="pages/cms/publicaciones.html" class="welcome-hero__cta" data-nav>Ver publicaciones</a>
             <a href="pages/institucionales/quienes-somos.html" class="welcome-hero__cta welcome-hero__cta--outline" data-nav>Conocé el Instituto</a>
@@ -37,8 +37,7 @@
 <section class="section section--muted" id="lineas">
     <div class="container">
         <div class="section-heading" style="max-width:none; text-align:center; align-items:center; margin-bottom:40px;">
-            <p class="section-eyebrow">Las 4 líneas de acción</p>
-            <h2>El corazón del Instituto</h2>
+            <h2>Nuestras 4 líneas de acción</h2>
         </div>
         <ul class="pillars">
             <li>
@@ -138,16 +137,14 @@
                 <p class="section-eyebrow" style="margin-bottom:8px;">Redes Sociales</p>
                 <h2 style="margin-bottom:0;">Seguinos en Instagram</h2>
             </div>
-            <a href="https://www.instagram.com/ipsur.av/" target="_blank" class="btn outline">@ipsur.av</a>
+
         </div>
         
         <!-- Contenedor del Feed -->
-        <div style="text-align:center; padding:3rem 1rem; background:var(--bg); border-radius:16px; border:2px dashed rgba(15,23,42,.1);">
-            <h4 style="margin-bottom:0.5rem; color:var(--text-heading);">Feed de Instagram</h4>
-            <p style="color:var(--text-muted); font-size:0.95rem; max-width:500px; margin:0 auto 1.5rem auto;">
-                <strong>Importante:</strong> Para mostrar el feed real de @ipsur.av aquí, debes registrarte gratis en <a href="https://elfsight.com/es/instagram-feed-instashow/" target="_blank" style="color:var(--primary); text-decoration:underline;">Elfsight</a> o <a href="https://curator.io/" target="_blank" style="color:var(--primary); text-decoration:underline;">Curator.io</a>, crear un widget con tu cuenta de Instagram y pegar el código HTML en el archivo <code>index.html</code>.
-            </p>
-            <div class="elfsight-app-REEMPLAZAR-AQUI"></div>
+        <div style="margin-top:2rem;">
+            <!-- Elfsight Instagram Feed | Untitled Instagram Feed -->
+            <script src="https://elfsightcdn.com/platform.js" async></script>
+            <div class="elfsight-app-f14edfc5-a39b-440f-b3ed-4cde3044d100" data-elfsight-app-lazy></div>
         </div>
     </div>
 </section>
@@ -194,6 +191,26 @@
 </section>
 
 </main>
+
+<!-- Modal nota completa -->
+<div id="note-modal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <img id="modal-image" src="" alt="" style="width:100%; border-radius:12px; margin-bottom:1.5rem; display:none;">
+        <div id="modal-youtube-container" style="display:none; width:100%; aspect-ratio:16/9; margin-bottom:1.5rem; border-radius:12px; overflow:hidden;">
+            <iframe id="modal-youtube" width="100%" height="100%" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <h2 id="modal-title" style="margin-bottom:1rem; font-size:2rem; line-height:1.2;"></h2>
+        <div class="modal-meta" style="display:flex; align-items:center; gap:1rem; margin-bottom:2rem; padding-bottom:1rem; border-bottom:1px solid rgba(255,255,255,0.1);">
+            <img id="modal-author-img" src="" alt="" style="width:40px; height:40px; border-radius:50%; object-fit:cover; display:none;">
+            <div>
+                <span id="modal-author" class="modal-author" style="display:block; font-weight:600; font-size:0.95rem;"></span>
+                <span id="modal-date" class="modal-date" style="display:block; font-size:0.85rem; color:var(--text-muted);"></span>
+            </div>
+        </div>
+        <div id="modal-text" class="modal-text" style="line-height:1.7;"></div>
+    </div>
+</div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>

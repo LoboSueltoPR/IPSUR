@@ -1,337 +1,325 @@
-// === Panel de Administracion con Usuarios y Editor Enriquecido ===
-
-const loginScreen = document.getElementById('login-screen');
-const adminPanel = document.getElementById('admin-panel');
-const loginForm = document.getElementById('login-form');
-const loginError = document.getElementById('login-error');
-const noteForm = document.getElementById('note-form');
-const imageInput = document.getElementById('note-image');
-const imagePreview = document.getElementById('image-preview');
-const userDisplay = document.getElementById('user-display');
-const formTitle = document.getElementById('form-title');
-const submitBtn = document.getElementById('submit-btn');
-const cancelEditBtn = document.getElementById('cancel-btn-wrap');
-const imageHint = document.getElementById('image-hint');
-
-let currentUser = null;
-let imageBase64 = null;
-let editingNoteId = null;
-let editingImageUrl = null;
-let quill = null;
-
-// === Inicializar Editor Quill ===
-function initQuill() {
-    if (quill) return;
-    quill = new Quill('#editor', {
-        theme: 'snow',
-        placeholder: 'Escribe el contenido de la nota aqui...',
-        modules: {
-            toolbar: [
-                [{ 'header': [1, 2, 3, false] }],
-                ['bold', 'italic', 'underline', 'strike'],
-                [{ 'color': [] }, { 'background': [] }],
-                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                ['blockquote', 'code-block'],
-                [{ 'align': [] }],
-                ['link'],
-                ['clean']
-            ]
-        }
-    });
-}
-
-// === Verificar sesion existente ===
-const savedUser = sessionStorage.getItem('ipsur_user');
-if (savedUser) {
-    currentUser = JSON.parse(savedUser);
-    showAdminPanel();
-}
-
-// === Login ===
-loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const username = document.getElementById('username-input').value.trim().toLowerCase();
-    const password = document.getElementById('password-input').value;
-    const hash = await hashPassword(password);
-
-    const user = USERS.find(u => u.username === username && u.passwordHash === hash);
-
-    if (user) {
-        currentUser = user;
-        sessionStorage.setItem('ipsur_user', JSON.stringify(user));
-        loginError.style.display = 'none';
-        showAdminPanel();
-    } else {
-        loginError.style.display = 'block';
-    }
-});
-
-function showAdminPanel() {
-    loginScreen.style.display = 'none';
-    adminPanel.style.display = 'block';
-    userDisplay.style.display = 'inline-block';
-    userDisplay.textContent = currentUser.displayName;
-    initQuill();
-    loadAdminNotes();
-}
-
-function logout() {
-    sessionStorage.removeItem('ipsur_user');
-    currentUser = null;
-    loginScreen.style.display = 'block';
-    adminPanel.style.display = 'none';
-    userDisplay.style.display = 'none';
-    document.getElementById('username-input').value = '';
-    document.getElementById('password-input').value = '';
-    cancelEdit();
-}
-
-// === Preview de imagen ===
-imageInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    if (file.size > 5 * 1024 * 1024) {
-        alert('La imagen es muy grande. Maximo 5MB.');
-        imageInput.value = '';
-        return;
-    }
-
-    compressAndPreview(file);
-});
-
-function compressAndPreview(file) {
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-        const img = new Image();
-        img.onload = () => {
-            const canvas = document.createElement('canvas');
-            const MAX_WIDTH = 1200;
-            const MAX_HEIGHT = 800;
-            let width = img.width;
-            let height = img.height;
-
-            if (width > MAX_WIDTH) {
-                height = (height * MAX_WIDTH) / width;
-                width = MAX_WIDTH;
-            }
-            if (height > MAX_HEIGHT) {
-                width = (width * MAX_HEIGHT) / height;
-                height = MAX_HEIGHT;
-            }
-
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-
-            imageBase64 = canvas.toDataURL('image/jpeg', 0.7);
-            imagePreview.innerHTML = `<img src="${imageBase64}" alt="Preview">`;
-
-            const sizeKB = Math.round((imageBase64.length * 3) / 4 / 1024);
-            if (sizeKB > 900) {
-                imageBase64 = canvas.toDataURL('image/jpeg', 0.4);
-            }
-        };
-        img.src = ev.target.result;
-    };
-    reader.readAsDataURL(file);
-}
-
-// === Publicar / Editar nota ===
-noteForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const title = document.getElementById('note-title').value.trim();
-    const htmlContent = quill.root.innerHTML.trim();
-
-    if (!title || !htmlContent || htmlContent === '<p><br></p>') {
-        alert('Completa el titulo y el contenido');
-        return;
-    }
-
-    // Si es nota nueva, la imagen es obligatoria
-    if (!editingNoteId && !imageBase64) {
-        alert('Selecciona una imagen para la nota');
-        return;
-    }
-
-    const progressDiv = document.getElementById('upload-progress');
-    const progressFill = document.getElementById('progress-fill');
-    const progressText = document.getElementById('progress-text');
-
-    submitBtn.disabled = true;
-    progressDiv.style.display = 'block';
-    progressFill.style.width = '50%';
-    progressText.textContent = editingNoteId ? 'Actualizando nota...' : 'Guardando nota...';
-
-    try {
-        const noteData = {
-            title: title,
-            text: htmlContent,
-            author: currentUser.username,
-            authorName: currentUser.displayName,
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        };
-
-        // Solo actualizar imagen si se subio una nueva
-        if (imageBase64) {
-            noteData.imageUrl = imageBase64;
-        }
-
-        if (editingNoteId) {
-            // Editar nota existente
-            await db.collection('notes').doc(editingNoteId).update(noteData);
-            progressText.textContent = 'Actualizada!';
-        } else {
-            // Crear nota nueva
-            noteData.imageUrl = imageBase64;
-            noteData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-            await db.collection('notes').add(noteData);
-            progressText.textContent = 'Publicada!';
-        }
-
-        progressFill.style.width = '100%';
-
-        setTimeout(() => {
-            resetForm();
-            progressDiv.style.display = 'none';
-            progressFill.style.width = '0%';
-            submitBtn.disabled = false;
-        }, 1000);
-
-        alert(editingNoteId ? 'Nota actualizada!' : 'Nota publicada!');
-        cancelEdit();
-        loadAdminNotes();
-
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Error: ' + error.message);
-        submitBtn.disabled = false;
-        progressDiv.style.display = 'none';
-    }
-});
-
-// === Modo edicion ===
-function startEdit(id, note) {
-    editingNoteId = id;
-    editingImageUrl = note.imageUrl;
-
-    formTitle.textContent = 'Editando Nota';
-    submitBtn.textContent = 'Guardar Cambios';
-    cancelEditBtn.classList.add('visible');
-    imageHint.style.display = 'block';
-    imageInput.removeAttribute('required');
-
-    document.getElementById('note-title').value = note.title;
-    quill.root.innerHTML = note.text;
-    imagePreview.innerHTML = `<img src="${note.imageUrl}" alt="Preview actual">`;
-    imageBase64 = null;
-
-    // Scroll arriba al formulario
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function cancelEdit() {
-    editingNoteId = null;
-    editingImageUrl = null;
-    formTitle.textContent = 'Publicar Nueva Nota';
-    submitBtn.textContent = 'Publicar Nota';
-    cancelEditBtn.classList.remove('visible');
-    imageHint.style.display = 'none';
-    resetForm();
-}
-
-function resetForm() {
-    noteForm.reset();
-    imagePreview.innerHTML = '';
-    imageBase64 = null;
-    if (quill) quill.root.innerHTML = '';
-}
-
-// === Cargar notas del usuario en admin ===
-async function loadAdminNotes() {
-    const list = document.getElementById('admin-notes-list');
-    list.innerHTML = '<p style="color:#666;">Cargando...</p>';
-
-    try {
-        const snapshot = await db.collection('notes')
-            .where('author', '==', currentUser.username)
-            .orderBy('createdAt', 'desc')
-            .get();
-
-        list.innerHTML = '';
-
-        if (snapshot.empty) {
-            list.innerHTML = '<p style="color:#666;">No tenes notas publicadas.</p>';
-            return;
-        }
-
-        snapshot.forEach(doc => {
-            const note = doc.data();
-            const item = document.createElement('div');
-            item.className = 'admin-note-item';
-
-            const date = note.createdAt ? formatDate(note.createdAt.toDate()) : 'Sin fecha';
-
-            item.innerHTML = `
-                <img src="${note.imageUrl}" alt="${escapeHtml(note.title)}">
-                <div class="admin-note-info">
-                    <h4>${escapeHtml(note.title)}</h4>
-                    <span>${date}</span>
-                </div>
-                <div class="admin-note-actions">
-                    <button class="btn-edit" data-id="${doc.id}">Editar</button>
-                    <button class="btn-danger" data-id="${doc.id}">Eliminar</button>
-                </div>
-            `;
-
-            // Event listeners
-            item.querySelector('.btn-edit').addEventListener('click', () => startEdit(doc.id, note));
-            item.querySelector('.btn-danger').addEventListener('click', () => deleteNote(doc.id));
-
-            list.appendChild(item);
+document.addEventListener('DOMContentLoaded', () => {
+    // --- Tabs Logic ---
+    const tabs = document.querySelectorAll('.admin-tab');
+    const sections = document.querySelectorAll('.admin-section');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            sections.forEach(s => s.classList.remove('active'));
+            
+            tab.classList.add('active');
+            document.getElementById(tab.dataset.target).classList.add('active');
         });
-    } catch (error) {
-        // Si falla por indice, intentar sin orderBy
-        if (error.code === 'failed-precondition') {
-            list.innerHTML = `<p style="color:#ff6b6b;">Necesitas crear un indice en Firestore. <a href="${error.message.match(/(https:\/\/[^\s]+)/)?.[1] || '#'}" target="_blank" style="color:#7c83ff;">Click aqui para crearlo</a></p>`;
-        } else {
-            list.innerHTML = '<p style="color:#ff6b6b;">Error al cargar notas.</p>';
-            console.error('Error:', error);
+    });
+
+    // --- Firebase Init ---
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+
+    // ==========================================
+    // PUBLICACIONES (NOTAS)
+    // ==========================================
+    const pubForm = document.getElementById('form-pub');
+    const pubListContainer = document.getElementById('pub-list-container');
+    let editingPubId = null;
+
+    // Inicializar Quill
+    let quill;
+    if (document.getElementById('pub-content-editor')) {
+        quill = new Quill('#pub-content-editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    ['bold', 'italic', 'underline', 'strike'],
+                    ['blockquote', 'code-block'],
+                    [{ 'header': 1 }, { 'header': 2 }],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'script': 'sub'}, { 'script': 'super' }],
+                    [{ 'indent': '-1'}, { 'indent': '+1' }],
+                    [{ 'direction': 'rtl' }],
+                    [{ 'size': ['small', false, 'large', 'huge'] }],
+                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'align': [] }],
+                    ['clean'],
+                    ['link', 'video']
+                ]
+            }
+        });
+    }
+
+    // Cargar publicaciones
+    function loadPubs() {
+        db.collection('notes').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+            pubListContainer.innerHTML = '';
+            if (snapshot.empty) {
+                pubListContainer.innerHTML = '<p style="color:var(--text-muted)">No hay publicaciones.</p>';
+                return;
+            }
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const item = document.createElement('div');
+                item.className = 'admin-item';
+                item.innerHTML = `
+                    <div class="admin-item-info">
+                        <h4>${data.title}</h4>
+                        <p>${data.author || 'Sin autor'} • ${new Date(data.createdAt?.toDate()).toLocaleDateString()}</p>
+                    </div>
+                    <div class="admin-item-actions">
+                        <button class="btn outline btn-sm" onclick="editPub('${doc.id}')">Editar</button>
+                        <button class="btn outline btn-sm btn-danger" onclick="deletePub('${doc.id}')">Eliminar</button>
+                    </div>
+                `;
+                pubListContainer.appendChild(item);
+            });
+        });
+    }
+
+    // Subir imagen auxiliar
+    async function uploadImage(file, folder) {
+        if (!file) return null;
+        const ref = storage.ref(`${folder}/${Date.now()}_${file.name}`);
+        await ref.put(file);
+        return await ref.getDownloadURL();
+    }
+
+    // Guardar publicación
+    if (pubForm) {
+        pubForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-pub-submit');
+            const spinner = btn.querySelector('.spinner');
+            const btnText = btn.querySelector('.btn-text');
+            
+            btn.disabled = true;
+            spinner.style.display = 'inline-block';
+            btnText.style.display = 'none';
+
+            try {
+                const title = document.getElementById('pub-title').value;
+                const author = document.getElementById('pub-author').value;
+                const youtube = document.getElementById('pub-youtube').value;
+                const content = quill.root.innerHTML;
+                
+                const coverFile = document.getElementById('pub-cover-img').files[0];
+                const authorFile = document.getElementById('pub-author-img').files[0];
+
+                let coverUrl = null;
+                let authorUrl = null;
+
+                if (coverFile) coverUrl = await uploadImage(coverFile, 'covers');
+                if (authorFile) authorUrl = await uploadImage(authorFile, 'authors');
+
+                const payload = {
+                    title,
+                    author,
+                    youtube,
+                    content
+                };
+                if (coverUrl) payload.coverUrl = coverUrl;
+                if (authorUrl) payload.authorUrl = authorUrl;
+
+                if (editingPubId) {
+                    await db.collection('notes').doc(editingPubId).update(payload);
+                    alert('Publicación actualizada con éxito');
+                } else {
+                    payload.coverUrl = payload.coverUrl || '';
+                    payload.authorUrl = payload.authorUrl || '';
+                    payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    await db.collection('notes').add(payload);
+                    alert('Publicación guardada con éxito');
+                }
+
+                cancelPubEdit();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al guardar la publicación: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                spinner.style.display = 'none';
+                btnText.style.display = 'inline-block';
+            }
+        });
+    }
+
+    window.editPub = async (id) => {
+        try {
+            const doc = await db.collection('notes').doc(id).get();
+            if (!doc.exists) return;
+            const data = doc.data();
+
+            document.getElementById('pub-title').value = data.title || '';
+            document.getElementById('pub-author').value = data.author || '';
+            document.getElementById('pub-youtube').value = data.youtube || '';
+            document.getElementById('pub-cover-img').value = '';
+            document.getElementById('pub-author-img').value = '';
+
+            if(quill) {
+                quill.clipboard.dangerouslyPasteHTML(data.content || '');
+            }
+
+            editingPubId = id;
+            document.getElementById('btn-pub-submit').querySelector('.btn-text').textContent = 'Actualizar Publicación';
+            document.getElementById('btn-pub-cancel').style.display = 'block';
+
+            // Scroll al form
+            document.getElementById('sec-publicaciones').scrollIntoView({ behavior: 'smooth' });
+        } catch(e) {
+            console.error('Error cargando publicación:', e);
         }
+    };
+
+    window.cancelPubEdit = () => {
+        editingPubId = null;
+        if(pubForm) pubForm.reset();
+        if(quill) quill.setContents([]);
+        document.getElementById('btn-pub-submit').querySelector('.btn-text').textContent = 'Publicar';
+        document.getElementById('btn-pub-cancel').style.display = 'none';
+    };
+
+    window.deletePub = async (id) => {
+        if(confirm('¿Seguro que querés borrar esta publicación?')) {
+            await db.collection('notes').doc(id).delete();
+        }
+    };
+
+
+    // ==========================================
+    // AGENDA
+    // ==========================================
+    const agendaForm = document.getElementById('form-agenda');
+    const agendaListContainer = document.getElementById('agenda-list-container');
+    let editingAgendaId = null;
+
+    // Cargar agenda
+    function loadAgenda() {
+        db.collection('agenda').orderBy('date', 'desc').onSnapshot(snapshot => {
+            agendaListContainer.innerHTML = '';
+            if (snapshot.empty) {
+                agendaListContainer.innerHTML = '<p style="color:var(--text-muted)">No hay eventos en la agenda.</p>';
+                return;
+            }
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const item = document.createElement('div');
+                item.className = 'admin-item';
+                item.innerHTML = `
+                    <div class="admin-item-info">
+                        <h4>${data.title}</h4>
+                        <p>${data.date} • ${data.status}</p>
+                    </div>
+                    <div class="admin-item-actions">
+                        <button class="btn outline btn-sm" onclick="editAgenda('${doc.id}')">Editar</button>
+                        <button class="btn outline btn-sm btn-danger" onclick="deleteAgenda('${doc.id}')">Eliminar</button>
+                    </div>
+                `;
+                agendaListContainer.appendChild(item);
+            });
+        });
     }
-}
 
-// === Eliminar nota ===
-async function deleteNote(id) {
-    if (!confirm('Estas seguro de que queres eliminar esta nota?')) return;
+    // Guardar agenda
+    if (agendaForm) {
+        agendaForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-agenda-submit');
+            const spinner = btn.querySelector('.spinner');
+            const btnText = btn.querySelector('.btn-text');
+            
+            btn.disabled = true;
+            spinner.style.display = 'inline-block';
+            btnText.style.display = 'none';
 
-    try {
-        await db.collection('notes').doc(id).delete();
-        loadAdminNotes();
-    } catch (error) {
-        alert('Error al eliminar: ' + error.message);
+            try {
+                const title = document.getElementById('agenda-title').value;
+                const date = document.getElementById('agenda-date').value;
+                const status = document.getElementById('agenda-status').value;
+                const tag = document.getElementById('agenda-tag').value;
+                const speakers = document.getElementById('agenda-speakers').value;
+                const link = document.getElementById('agenda-link').value;
+                const content = document.getElementById('agenda-content').value;
+                
+                const imgFile = document.getElementById('agenda-img').files[0];
+                let imgUrl = null;
+                if (imgFile) {
+                    imgUrl = await uploadImage(imgFile, 'agenda');
+                }
+
+                const payload = {
+                    title,
+                    date,
+                    status,
+                    tag,
+                    speakers,
+                    link,
+                    content
+                };
+                if (imgUrl) payload.imgUrl = imgUrl;
+
+                if (editingAgendaId) {
+                    await db.collection('agenda').doc(editingAgendaId).update(payload);
+                    alert('Evento actualizado con éxito');
+                } else {
+                    payload.imgUrl = payload.imgUrl || '';
+                    payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    await db.collection('agenda').add(payload);
+                    alert('Evento guardado con éxito');
+                }
+
+                cancelAgendaEdit();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al guardar el evento: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                spinner.style.display = 'none';
+                btnText.style.display = 'inline-block';
+            }
+        });
     }
-}
 
-// === Utilidades ===
+    window.editAgenda = async (id) => {
+        try {
+            const doc = await db.collection('agenda').doc(id).get();
+            if (!doc.exists) return;
+            const data = doc.data();
 
-async function hashPassword(password) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(password);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
+            document.getElementById('agenda-title').value = data.title || '';
+            document.getElementById('agenda-date').value = data.date || '';
+            document.getElementById('agenda-status').value = data.status || 'confirmado';
+            document.getElementById('agenda-tag').value = data.tag || '';
+            document.getElementById('agenda-speakers').value = data.speakers || '';
+            document.getElementById('agenda-link').value = data.link || '';
+            document.getElementById('agenda-content').value = data.content || '';
+            document.getElementById('agenda-img').value = '';
 
-function formatDate(date) {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString('es-ES', options);
-}
+            editingAgendaId = id;
+            document.getElementById('btn-agenda-submit').querySelector('.btn-text').textContent = 'Actualizar Evento';
+            document.getElementById('btn-agenda-cancel').style.display = 'block';
 
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
+            // Scroll al form
+            document.getElementById('sec-agenda').scrollIntoView({ behavior: 'smooth' });
+        } catch(e) {
+            console.error('Error cargando evento:', e);
+        }
+    };
+
+    window.cancelAgendaEdit = () => {
+        editingAgendaId = null;
+        if(agendaForm) agendaForm.reset();
+        document.getElementById('btn-agenda-submit').querySelector('.btn-text').textContent = 'Guardar Evento';
+        document.getElementById('btn-agenda-cancel').style.display = 'none';
+    };
+
+    window.deleteAgenda = async (id) => {
+        if(confirm('¿Seguro que querés borrar este evento?')) {
+            await db.collection('agenda').doc(id).delete();
+        }
+    };
+
+
+    // Inicializar cargas
+    loadPubs();
+    loadAgenda();
+});

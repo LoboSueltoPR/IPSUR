@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agenda — IPSUR</title>
     <meta name="description" content="Agenda del Instituto Político del Sur: lanzamiento, seminarios, convocatorias y la revista IPSUR.">
-        <link rel="icon" href="../../assets/images/logo.png">
+    <link rel="icon" href="../../assets/images/logo.png">
     <link rel="stylesheet" href="../../css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="../../js/core/paths.js"></script>
@@ -24,27 +24,40 @@
 
     <section class="section section--surface">
         <div class="container">
-            <ul class="agenda-list">
-                <li>
-                    <div class="agenda-item-inner">
-                        <div class="agenda-date-block">
-                            <span class="mes">DIC</span><span class="dia">12</span>
-                        </div>
-                        <div class="agenda-body">
-                            <div class="agenda-body-text">
-                                <span class="agenda-tag-pill lanzamiento">Lanzamiento</span>
-                                <h4>Lanzamiento oficial de IPSUR</h4>
-                                <p>Presentación pública del Instituto. Web, redes e inicio de actividades.</p>
-                            </div>
-                            <span class="agenda-estado-pill confirmado">Confirmado</span>
-                        </div>
-                    </div>
-                </li>
+            <ul class="agenda-list" id="agenda-dynamic-list">
+                <p style="color:var(--text-muted)">Cargando agenda...</p>
             </ul>
         </div>
     </section>
 
 </main>
+
+<!-- Modal Evento -->
+<div id="agenda-modal" class="modal">
+    <div class="modal-content" style="max-width:600px;">
+        <button class="modal-close" onclick="closeAgendaModal()">&times;</button>
+        <img id="agenda-modal-img" src="" alt="" style="width:100%; border-radius:12px; margin-bottom:1.5rem; display:none;">
+        <span id="agenda-modal-tag" style="background:var(--primary-light); color:#fff; padding:0.25rem 0.75rem; border-radius:999px; font-size:0.8rem; font-weight:600; margin-bottom:1rem; display:inline-block;"></span>
+        <h2 id="agenda-modal-title" style="margin-bottom:0.5rem; font-size:1.8rem; line-height:1.2;"></h2>
+        <p id="agenda-modal-date" style="color:var(--text-muted); margin-bottom:1.5rem; font-weight:500;"></p>
+        
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.05); padding:1rem; border-radius:12px; margin-bottom:1.5rem;">
+            <h4 style="margin-bottom:0.25rem; font-size:0.9rem; color:var(--text-muted);">Disertantes</h4>
+            <p id="agenda-modal-speakers" style="font-weight:500;"></p>
+        </div>
+
+        <div id="agenda-modal-content" class="modal-text" style="line-height:1.7; margin-bottom:2rem;"></div>
+        
+        <div id="agenda-modal-link-container" style="text-align:center; display:none;">
+            <a href="#" target="_blank" id="agenda-modal-link" class="btn" style="border-radius:12px; padding:0.8rem 2rem;">Inscribirme al evento</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="../../js/core/firebase-config.js"></script>
 <script src="../../js/ui/layout.js"></script>
+<script src="../../js/services/app.js"></script>
 </body>
 </html>
