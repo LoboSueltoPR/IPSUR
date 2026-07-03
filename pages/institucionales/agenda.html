@@ -37,18 +37,18 @@
     <div class="modal-content" style="max-width:600px;">
         <button class="modal-close" onclick="closeAgendaModal()">&times;</button>
         <img id="agenda-modal-img" src="" alt="" style="width:100%; border-radius:12px; margin-bottom:1.5rem; display:none;">
-        <span id="agenda-modal-tag" style="background:var(--primary-light); color:#fff; padding:0.25rem 0.75rem; border-radius:999px; font-size:0.8rem; font-weight:600; margin-bottom:1rem; display:inline-block;"></span>
-        <h2 id="agenda-modal-title" style="margin-bottom:0.5rem; font-size:1.8rem; line-height:1.2;"></h2>
-        <p id="agenda-modal-date" style="color:var(--text-muted); margin-bottom:1.5rem; font-weight:500;"></p>
+        <span id="agenda-modal-tag" style="background:var(--primary-light); color:#fff; padding:0.25rem 0.75rem; border-radius:999px; font-size:0.8rem; font-weight:600; margin:1.5rem 24px 0 24px; display:inline-block;"></span>
+        <h2 id="agenda-modal-title" style="margin-bottom:0.5rem; padding-top:1rem; font-size:1.8rem; line-height:1.2;"></h2>
+        <p id="agenda-modal-date" style="color:var(--text-muted); margin:0 24px 1.5rem 24px; font-weight:500;"></p>
         
-        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.05); padding:1rem; border-radius:12px; margin-bottom:1.5rem;">
+        <div style="background:var(--bg); border:1px solid rgba(15,23,42,0.05); padding:1rem; border-radius:12px; margin:0 24px 1.5rem 24px;">
             <h4 style="margin-bottom:0.25rem; font-size:0.9rem; color:var(--text-muted);">Disertantes</h4>
-            <p id="agenda-modal-speakers" style="font-weight:500;"></p>
+            <p id="agenda-modal-speakers" style="font-weight:500; margin:0;"></p>
         </div>
 
-        <div id="agenda-modal-content" class="modal-text" style="line-height:1.7; margin-bottom:2rem;"></div>
+        <div id="agenda-modal-content" class="modal-text" style="line-height:1.7; margin-bottom:1rem;"></div>
         
-        <div id="agenda-modal-link-container" style="text-align:center; display:none;">
+        <div id="agenda-modal-link-container" style="text-align:center; display:none; margin:0 24px 24px 24px;">
             <a href="#" target="_blank" id="agenda-modal-link" class="btn" style="border-radius:12px; padding:0.8rem 2rem;">Inscribirme al evento</a>
         </div>
     </div>
